@@ -85,7 +85,7 @@ au BufRead,BufNewFile *.c,*.h set formatoptions-=c formatoptions-=o formatoption
 " set statusline+=%{synIDattr(synID(line('.'),col('.'),1),'name')}\  " highlight
 " set statusline+=%b,0x%-8B\                   " current char
 " set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
-" set laststatus=2
+set laststatus=2
 
 " vim-plug plugins
 call plug#begin('~/.vim/plugged')
@@ -113,3 +113,7 @@ call plug#end()
 
 " Mappings for controlling plugins
 map <C-o> :NERDTreeToggle<CR>
+
+" Necessaary for lastline plugin
+set laststatus=2
+
