@@ -109,11 +109,47 @@ Plug 'airblade/vim-gitgutter'
 " Syntastic - https://github.com/vim-syntastic/syntastic
 Plug 'vim-syntastic/syntastic'
 
+" Ultisnips - https://github.com/sirver/ultisnips
+Plug 'sirver/ultisnips'
+"
+" Snippets repo for Ultisnips
+Plug 'honza/vim-snippets'
+
+" YouCompleteMe - Auto-completion text engine
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+
+" Super Tab - For key-mappings
+Plug 'ervandew/supertab'
+
 call plug#end()
 
 " Mappings for controlling plugins
-map <C-o> :NERDTreeToggle<CR>
+"
+" make YCM compatible with UltiSnips (using supertab)
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:SuperTabDefaultCompletionType = '<C-n>'
 
-" Necessaary for lastline plugin
+" better key bindings for UltiSnipsExpandTrigger
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+" " If you want :UltiSnipsEdit to split your window.
+" let g:UltiSnipsEditSplit="vertical"
+
+" NERD Tree - Pops up file browser
+map <C-f> :NERDTreeToggle<CR>
+
+" Lastline - Necessaary for lastline plugin
 set laststatus=2
+
+" For using AG command https://github.com/ggreer/the_silver_searcher
+let g:ackprg = 'ag --nogroup --nocolor --column'
+
+" vimtex build options
+let g:vimtex_compiler_latexmk = {
+            \ 'build_dir' : 'build',
+            \}
+let g:vimtex_view_method = 'skim'
 
