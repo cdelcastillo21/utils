@@ -24,7 +24,6 @@ set noerrorbells
 set novisualbell
 set t_vb=
 set background=dark
-set colorcolumn=80
 set tm=500
 
 " === Syntax Highlighting & auto-indent ===
@@ -50,14 +49,21 @@ set wildignore=.svn,CVS,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*
 
 " === Coding Style ===
 "
-fu Carlos_style()
+fu Tab_style()
   set shiftwidth=2
   set expandtab
   set tabstop=2
   set softtabstop=2
 endf
 
-au BufRead,BufNewFile *py,*pyw,*.c,*.h,*.cpp call Carlos_style()
+au BufRead,BufNewFile *py,*pyw,*.c,*.h,*.cpp,*.md call Tab_style()
+
+fu Code_view()
+  set colorcolumn=80
+endf
+
+au BufRead,BufNewFile *py,*pyw,*.c,*.h,*.cpp, call Code_view()
+
 au BufRead,BufNewFile Makefile* set noexpandtab
 
 " strace settings
@@ -121,6 +127,10 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 " Super Tab - For key-mappings
 Plug 'ervandew/supertab'
 
+" Pandoc
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+
 call plug#end()
 
 " Mappings for controlling plugins
@@ -153,3 +163,9 @@ let g:vimtex_compiler_latexmk = {
             \}
 let g:vimtex_view_method = 'skim'
 
+" For previewing markdonw files
+let vim_markdown_preview_github=1
+
+map <C-p> :Pandoc --filter pandoc-xnos --citeproc
+
+autocmd FileType markdown UltiSnipsAddFiletypes markdown
