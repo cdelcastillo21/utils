@@ -1,0 +1,12 @@
+#!/usr/bin/expect
+
+#Usage tacc.expect <host> <ssh user> <ssh password> <MFA>
+
+set timeout 60
+
+spawn ssh -Y [lindex $argv 1]@[lindex $argv 0].tacc.utexas.edu
+
+expect "*Password:" { send "[lindex $argv 2]\r" } 
+expect "*TACC Token Code:" { send "[lindex $argv 3]\r" }
+
+interact
