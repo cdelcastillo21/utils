@@ -3,7 +3,7 @@ set nocompatible " Must be the first line
 "
 " ============================================================
 
-" === Global Settings ===
+"" === Global Settings ===
 set modeline
 set encoding=utf-8
 set mouse=a
@@ -102,6 +102,12 @@ Plug 'ryanoasis/vim-devicons'
 " Tmux integration
 Plug 'christoomey/vim-tmux-navigator'
 
+" The NERD commenter
+Plug 'preservim/nerdcommenter'
+
+" Tag bar
+Plug 'preservim/tagbar'
+
 call plug#end()
 
 " ===  LastLine Plugin SetUp ===
@@ -198,21 +204,23 @@ fu Pep_max_line()
   set colorcolumn=80
 endf
 
+" Use the below highlight group when displaying bad whitespace is desired.
+highlight BadWhitespace ctermbg=red guibg=red
+
+" === Git  ===
+
 fu Git_commit_view()
   highlight ColorColumn ctermbg=0 guibg=blue
   set colorcolumn=50,72
 endf
-
-" Use the below highlight group when displaying bad whitespace is desired.
-highlight BadWhitespace ctermbg=red guibg=red
-
-" === Git Commit Files ===
 
 au BufRead,BufNewFile COMMIT_EDITMSG, call Git_commit_view()
 
 " For displaying commit emojis
 au BufRead,BufNewFile COMMIT_EDITMSG, set splitright 
 au BufRead,BufNewFile COMMIT_EDITMSG, NERDTreeClose | vnew ~/.git-hint.txt| 0read ! cheat git-emoji
+
+nnoremap <leader>lg :w\|:execute '!lazygit'\|:redraw!<cr>
 
 " === C Files ===
  
@@ -259,3 +267,4 @@ au BufRead,BufNewFile *.md call Tab_style_2space()
 
 " Add ultisnips
 autocmd FileType markdown UltiSnipsAddFiletypes markdown
+
