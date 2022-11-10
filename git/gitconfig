@@ -9,8 +9,14 @@
 
 [interactive]
 	diffFilter = delta --color-only --features=interactive
+
 [user]
 	name = Carlos del-Castillo-Negrete
 	email = cdelcastillo21@gmail.com
-[uesr]
-	email = cdelcastillo21@gmail.com
+
+[credential]
+	helper = store
+
+[delta]
+	side-by-side = true
+	linenumbers = true

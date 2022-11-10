@@ -1,0 +1,92 @@
+---
+syntax: rst
+tags: [git]
+---
+====
+Tips
+====
+- Format:
+  - subject (required):
+    - 50 char max summary  (1st column)
+    - start with relevant git emoji
+    - capitlize first letter
+    - no period to end
+  - body and/or footer (optional)
+    - blank line between subject, body, footer
+    - 72 char max lines (2nd column)
+    - body in bullets, use to elaborate details on changes 
+    - Footer contains issue no. or ticket from github, etc.
+- Grammer:
+  - Present imperative for subject (e.g. Add instead of Added)
+  - Present tense for body text 
+- Other Tips:
+  - Describe what and why, not how
+  - Mention specific components changed
+
+=======
+Example
+=======
+
+:sparkles: [FEAT] Drag/drop image upload
+
+Add:
+ + Disable upload button when no file selected
+ + Fix text: file supported and max size.
+
+Tests:
+ + All bugs fixed
+
+Issue: #23
+  OR
+JIRA Ticket: <link>
+
+======
+Emojis
+======
+
+|Emoji | Commit type                | Code                        |
+|:-----|:---------------------------|:----------------------------|
+|  🎉  | Initial commit             | :tada:                      |
+|  🔖  | Version tag                | :bookmark:                  |
+|  ✨  | New feature                | :sparkles:                  |
+|  🐛  | Bugfix                     | :bug:                       |
+|  📇  | Metadata                   | :card_index:                |
+|  📚  | Documentation              | :books:                     |
+|  💡  | Documenting source code    | :bulb:                      |
+|  🐎  | Performance                | :racehorse:                 |
+|  💄  | Cosmetic                   | :lipstick:                  |
+|  🚨  | Tests                      | :rotating_light:            |
+|  ✅  | Adding a test              | :white_check_mark:          |
+|  ✔️   | Make a test pass           | :heavy_check_mark:          |
+|  ⚡️  | General update             | :zap:                       |
+|  🎨  | Improve format/structure   | :art:                       |
+|  🔨  | Refactor code              | :hammer:                    |
+|  🔥  | Removing code/files        | :fire:                      |
+|  💚  | Continuous Integration     | :green_heart:               |
+|  🔒  | Security                   | :lock:                      |
+|  ⬆️   | Upgrading dependencies     | :arrow_up:                  |
+|  ⬇️   | Downgrading dependencies   | :arrow_down:                |
+|  👕  | Lint                       | :shirt:                     |
+|  👽  | Translation                | :alien:                     |
+|  📝  | Text                       | :pencil:                    |
+|  🚑  | Critical hotfix            | :ambulance:                 |
+|  🚀  | Deploying stuff            | :rocket:                    |
+|  🍎  | Fixing on MacOS            | :apple:                     |
+|  🐧  | Fixing on Linux            | :penguin:                   |
+|  🏁  | Fixing on Windows          | :checkered_flag:            |
+|  🚧  | Work in progress           | :construction:              |
+|  👷  | Adding CI build system     | :construction_worker:       |
+|  📈  | Analytics or tracking code | :chart_with_upwards_trend:  |
+|  ➖  | Removing a dependency      | :heavy_minus_sign:          |
+|  ➕  | Adding a dependency        | :heavy_plus_sign:           |
+|  🐳  | Docker                     | :whale:                     |
+|  🔧  | Configuration files        | :wrench:                    |
+|  📦  | Package.json in JS         | :package:                   |
+|  🔀  | Merging branches           | :twisted_rightwards_arrows: |
+|  💩  | Bad code / need improv.    | :hankey:                    |
+|  ⏪  | Reverting changes          | :rewind:                    |
+|  💥  | Breaking changes           | :boom:                      |
+|  👌  | Code review changes        | :ok_hand:                   |
+|  ♿️  | Accessibility              | :wheelchair:                |
+a  🚚  | Move/rename repository     | :truck:                     |
+

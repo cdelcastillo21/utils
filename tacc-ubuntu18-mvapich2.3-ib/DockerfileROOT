@@ -1,0 +1,92 @@
+FROM tacc/tacc-ubuntu18-mvapich2.3-ib
+
+RUN apt-get update && \
+    apt-get install -y \
+    curl zip tar wget git expect \
+    software-properties-common
+
+# Configure python
+COPY utils/tacc-ubuntu18-mvapich2.3-ib/vim_env.yml /data/vim_env.yml
+RUN curl micro.mamba.pm/install.sh | bash && \
+    source /root/.bashrc && \
+    micromamba create -y -f /data/vim_env.yml && \
+    micromamba shell init && \
+    echo "set -o vi" >> /root/.bashrc && \
+    echo "set -u EDITOR vim" >> /root/.bashrc && \
+    echo "export PATH=\"/root/go/bin/:\$PATH\"" >> /root/.bashrc && \
+    echo "alias mm=micromamba" >> /root/.bashrc && \
+    echo "micromamba activate dev" >> /root/.bashrc
+
+# VIM setup 
+COPY utils/tacc-ubuntu18-mvapich2.3-ib/vimrc /root/.vimrc
+RUN source ~/.bashrc && \
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
+    vim +PlugInstall +qall
+
+# Other utility packages
+COPY utils/gitconfig /root/.gitconfig
+RUN source ~/.bashrc && \
+    wget https://github.com/dandavison/delta/releases/download/0.14.0/git-delta-musl_0.14.0_amd64.deb && \
+    dpkg -i git-delta-musl_0.14.0_amd64.deb && \
+    rm git-delta-musl_0.14.0_amd64.deb
+RUN source ~/.bashrc && \
+    wget https://github.com/bootandy/dust/releases/download/v0.8.3/du-dust_0.8.3_amd64.deb && \
+    dpkg -i du-dust_0.8.3_amd64.deb && \
+    rm du-dust_0.8.3_amd64.deb
+RUN source ~/.bashrc && go install github.com/cheat/cheat/cmd/cheat@latest
+COPY utils/cheatsheets/git-emoji /root/.config/cheat/cheatsheets/personal/git-emoji
+RUN source ~/.bashrc && pip3 install tldr
+
+# NODE Utilities
+RUN source ~/.bashrc && \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash && \
+    source ~/.bashrc && \
+    nvm install 11.0.0 --latest-npm && \
+    npm config set user 0 && \
+    npm config set unsafe-perm true && \
+    npm install --global trash-cli && \
+    npm install --global vtop
+
+# Configure fish shell
+RUN source /root/.bashrc && \
+    micromamba shell init -s fish && \
+    echo "curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher" > fisher_install.fish && \
+    fish fisher_install.fish && \
+    echo "fisher install IlanCosman/tide@v5" > tide_install.fish && \
+    fish tide_install.fish && \
+    echo "fisher install jethrokuan/z" > z_install.fish && \
+    fish z_install.fish && \
+    rm fisher_install.fish tide_install.fish z_install.fish
+COPY utils/tacc-ubuntu18-mvapich2.3-ib/config.fish /root/.config/fish/config.fish
+COPY utils/fish_configs/fish_variables /root/.config/fish/fish_variables
+
+# NODE Utilities in Fish - DO i need?
+# RUN echo "fisher install jorgebucaran/nvm.fish" > nvm_install.fish && \
+#     fish nvm_install.fish && \
+#     rm nvm_install.fish
+# RUN echo "nvm install 11.0.0 --latest-npm && \
+#     npm config set user 0 && \
+#     npm config set unsafe-perm true && \
+#     npm install --global trash-cli && \
+#     npm install --global vtop" >> node_utils_install.fish && \
+#     fish nvm_install.fish && \
+#     rm fisher_install.fish tide_install.fish z_install.fish nvm_install.fish
+
+# Java17 Download - For YCM
+# RUN add-apt-repository -y ppa:linuxuprising/java && \
+#     apt update && \
+#     echo debconf shared/accepted-oracle-license-v1-3 select true | debconf-set-selections && \
+#     echo debconf shared/accepted-oracle-license-v1-3 seen true | debconf-set-selections && \
+#     apt install -y oracle-java17-installer
+
+# YouCompleteMe vim set-up
+# RUN source ~/.bashrc && cd ~/.vim/plugged/YouCompleteMe && \
+#     CC=gcc-8 CXX=g++-8 python3 ./install.py  --force-sudo --all
+
+RUN useradd -rm -d /home/clos21 -s /bin/bash -g root -G sudo -u 1001 clos21 && \
+    chmod -R a-x+rX /root && \
+    cp -r /root/.bashrc /root/.config /home/clos21/
+USER clos21
+WORKDIR /home/clos21
+

@@ -2,59 +2,94 @@ FROM tacc/tacc-ubuntu18-mvapich2.3-ib
 
 RUN apt-get update && \
     apt-get install -y \
-    curl zip tar wget \
-    tmux \
-    vim \
-    htop \
-    httpie \
-    silversearcher-ag \
+    curl zip tar wget git expect \
     software-properties-common \
-    expect \
-    git \
-    g++-8 \
-    nodejs \
-    npm
+    lolcat fortune \
+    texlive-base \
+    texlive-latex-base \
+    texlive-latex-extra \
+    texlive-fonts-recommended \
+    texlive-fonts-extra \
+    texlive-science \
+    latexmk \
+    build-essential \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && apt-get autoremove -y
+RUN apt update && \
+    apt install -y neofetch
 
-# Install exa - LS replacement
-COPY utils/tacc-ubuntu18-mvapich2.3-ib/exa_install.sh /data/exa_install.sh
-RUN chmod +x /data/exa_install.sh && /data/exa_install.sh
+RUN wget https://github.com/dandavison/delta/releases/download/0.14.0/git-delta-musl_0.14.0_amd64.deb && \
+    dpkg -i git-delta-musl_0.14.0_amd64.deb && \
+    rm git-delta-musl_0.14.0_amd64.deb
+RUN wget https://github.com/bootandy/dust/releases/download/v0.8.3/du-dust_0.8.3_amd64.deb && \
+    dpkg -i du-dust_0.8.3_amd64.deb && \
+    rm du-dust_0.8.3_amd64.deb
 
-# Instal GO
-RUN wget https://go.dev/dl/go1.19.3.linux-amd64.tar.gz && \
-    tar -xvf go1.19.3.linux-amd64.tar.gz && \
-    mv go/ /usr/local/ && \
-    echo "export GOPATH=$HOME/go" >> /root/.bashrc && \
-    echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> /root/.bashrc
+ARG user=clos21
 
-# Configure shell environment
-RUN add-apt-repository -y ppa:fish-shell/release-3 && apt update && apt install -y fish
-
-# Configure fish shell
-RUN mkdir /data/fish
-COPY utils/fish_configs/fish_variables /data/fish/fish_variables
-COPY utils/tacc-ubuntu18-mvapich2.3-ib/config.fish /data/fish/config.fish
-COPY utils/tacc-ubuntu18-mvapich2.3-ib/fish_setup.sh /data/fish/fish_setup.sh
-RUN chmod +x /data/fish/fish_setup.sh && /data/fish/fish_setup.sh
+RUN useradd -rm -d /work/$user -s /bin/bash -g root -G sudo -u 1001 $user && \
+    echo 'root:baptopi!' | chpasswd && \
+    echo 'clos21:baptopi!' | chpasswd
+USER clos21
+WORKDIR /work/$user
 
 # Configure python
-COPY utils/tacc-ubuntu18-mvapich2.3-ib/vim_env.yml /data/vim_env.yml
-RUN curl micro.mamba.pm/install.sh | bash && \
-    source /root/.bashrc && \
-    micromamba shell init && \
-    micromamba shell init -s fish -p ~/micromamba && \
-    micromamba create -y -f /data/vim_env.yml && \
-    echo "set -o vi" >> /root/.bashrc && \
-    echo "set -u EDITOR vim" >> /root/.bashrc && \
-    echo "alias mm=micromamba" >> /root/.bashrc && \
-    echo "micromamba activate dev" >> /root/.bashrc
+COPY utils/tacc-ubuntu18-mvapich2.3-ib/dev-full.yml vim_env.yml
+RUN curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba && \
+    ./bin/micromamba create -y -f vim_env.yml && rm vim_env.yml 
+RUN ./bin/micromamba shell init -s bash
+RUN echo "set -o vi" >> $HOME/.bashrc && \
+    echo "set -u EDITOR vim" >> $HOME/.bashrc && \
+    echo "alias mm=micromamba" >> $HOME/.bashrc && \
+    echo "micromamba activate dev" >> $HOME/.bashrc
 
+ENV PATH="${PATH}:/${HOME}/go/bin/"
+ENV PATH="${PATH}:/${HOME}/.cargo/bin/"
+ENV PATH="${PATH}:/usr/games/"
+    # echo "export PATH=\"\$HOME/go/bin/:\$PATH\"" >> $HOME/.bashrc && \
+ 
 # VIM setup 
-# COPY utils/tacc-ubuntu18-mvapich2.3-ib/vimrc /data/vimrc
-# RUN source ~/.bashrc && micromamba activate dev && \
-#     cp /data/vimrc ~/.vimrc && \
-#     curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-#         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
-#     vim +PlugInstall +qall
+COPY --chown=$user utils/tacc-ubuntu18-mvapich2.3-ib/vimrc /work/$user/.vimrc
+RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
+    $HOME/micromamba/envs/dev/bin/vim +PlugInstall +qall
+
+# Other utility packages
+COPY --chown=$user utils/git/gitconfig /work/$user/.gitconfig
+ENV gcc="/usr/bin/gcc" CC="/usr/bin/gcc"
+RUN $HOME/micromamba/envs/dev/bin/go install github.com/cheat/cheat/cmd/cheat@latest
+COPY --chown=$user utils/cheatsheets/git-emoji /root/.config/cheat/cheatsheets/personal/git-emoji
+
+# Configure fish shell test
+COPY --chown=$user  utils/fish/config.fish /work/$user/.config/fish/config.fish
+COPY --chown=$user  utils/fish_configs/fish_greeting.fish /work/$user/.config/fish/functions/fish_greeting.fish
+RUN ./bin/micromamba shell init -s fish && \
+    echo "alias mm=\"micromamba\"" >> $HOME/.config/fish/config.fish && \
+    echo "mm activate dev" >> $HOME/.config/fish/config.fish && \
+    echo "curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher" > fisher_install.fish && \
+    echo "fisher install IlanCosman/tide@v5" >> fisher_install.fish && \
+    echo "fisher install jethrokuan/z" >> fisher_install.fish && \
+    echo "fisher install jorgebucaran/nvm.fish" >> fisher_install.fish && \
+    echo "nvm install 17.0.0 --latest-npm" >> fisher_install.fish && \
+    echo "npm install --global trash-cli && \\" >> fisher_install.fish && \
+    echo "alias rm=\"trash\"" >> $HOME/.config/fish/config.fish && \
+    echo "npm install --global vtop" >> fisher_install.fish && \
+    echo "npm install --global tldr" >> fisher_install.fish && \
+    echo "tldr --update" >> fisher_install.fish && \
+    echo "npm install --global figlet-cli" >> fisher_install.fish && \
+    echo "npm install --global cowsay" >> fisher_install.fish && \
+    echo "node -v > $HOME/.nvmrc" >> fisher_install.fish && \
+    $HOME/micromamba/envs/dev/bin/fish fisher_install.fish && rm fisher_install.fish && \
+    echo "nvm install" >> $HOME/.config/fish/config.fish && \
+    echo "fish" >> $HOME/.bashrc
+COPY --chown=$user  utils/tacc-ubuntu18-mvapich2.3-ib/fish_variables /work/$user/.config/fish/fish_variables
+
+# tmux configuration
+COPY --chown=$user  utils/tmux/tmux.conf /home/$user/.tmux.conf 
+COPY --chown=$user  utils/tmux/tmux.conf.local /home/$user/.tmux.conf.local
+
+RUN /work/clos21/micromamba/envs/dev/bin/cargo install onefetch
 
 # Java17 Download - For YCM
 # RUN add-apt-repository -y ppa:linuxuprising/java && \
@@ -66,8 +101,4 @@ RUN curl micro.mamba.pm/install.sh | bash && \
 # YouCompleteMe vim set-up
 # RUN source ~/.bashrc && cd ~/.vim/plugged/YouCompleteMe && \
 #     CC=gcc-8 CXX=g++-8 python3 ./install.py  --force-sudo --all
-
-# Install rust utilities
-# COPY utils/tacc-ubuntu18-mvapich2.3-ib/rust_utils.sh /data/rust_utils.sh
-# RUN chmod +x /data/rust_utils.sh && /data/rust_utils.sh
 
