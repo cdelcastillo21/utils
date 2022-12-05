@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  #Configuration for Hub+Proxy
+  jupyterhub:
+    build: .                           # Build the container from this folder
+    container_name: jupyterhub_hub     # Service will use this container name
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jupyterhub_data:/srv/jupyterlab
+    environment:                      # Env variables passed to hub process
+      DOCKER_JUPYTER_IMAGE: clos21/tacc-frontera-adcirc:latest
+      DOCKER_NETWORK_NAME: ${COMPOSE_PROJECT_NAME}_default
+      HUB_IP: jupyterhub_hub
+    ports:
+      - 8000:8000
+    restart: unless-stopped
+
+  jupyterlab:
+    image: clos21/tacc-frontera-adcirc:latest
+    command: echo
+
+volumes:
+  jupyterhub_data:

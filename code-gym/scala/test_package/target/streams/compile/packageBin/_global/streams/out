@@ -1,0 +1,21 @@
+[0m[[0m[0mdebug[0m] [0m[0mPackaging /Users/carlos/repos/code-gym/scala/test_package/target/scala-2.12/test_package_2.12-0.1.0-SNAPSHOT.jar ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	gym[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/carlos/repos/code-gym/scala/test_package/target/scala-2.12/classes/gym[0m
+[0m[[0m[0mdebug[0m] [0m[0m	gym/basic[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/carlos/repos/code-gym/scala/test_package/target/scala-2.12/classes/gym/basic[0m
+[0m[[0m[0mdebug[0m] [0m[0m	gym/basic/TestFactory.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/carlos/repos/code-gym/scala/test_package/target/scala-2.12/classes/gym/basic/TestFactory.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	gym/basic/RunBasic$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/carlos/repos/code-gym/scala/test_package/target/scala-2.12/classes/gym/basic/RunBasic$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	gym/basic/Test.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/carlos/repos/code-gym/scala/test_package/target/scala-2.12/classes/gym/basic/Test.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	gym/basic/RunBasic$delayedInit$body.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/carlos/repos/code-gym/scala/test_package/target/scala-2.12/classes/gym/basic/RunBasic$delayedInit$body.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	gym/basic/TestFactory$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/carlos/repos/code-gym/scala/test_package/target/scala-2.12/classes/gym/basic/TestFactory$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	gym/basic/RunBasic.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/carlos/repos/code-gym/scala/test_package/target/scala-2.12/classes/gym/basic/RunBasic.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	gym/basic/WhileTest.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/carlos/repos/code-gym/scala/test_package/target/scala-2.12/classes/gym/basic/WhileTest.class[0m
+[0m[[0m[0mdebug[0m] [0m[0mDone packaging.[0m
