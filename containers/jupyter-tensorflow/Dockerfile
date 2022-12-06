@@ -86,7 +86,8 @@ RUN mamba install -y ptpython \
 		     tokei \
 		     glow \
 		     trash-cli \
-		     ipydrawio
+		     ipydrawio \
+		     curl
 
 RUN pip install jupyterlab-citation-manager \
 		aquirdturtle_collapsible_headings \
@@ -105,10 +106,11 @@ RUN jupyter lab build
 
 RUN mkdir -p $LAB_USER_HOME/.vim/autoload/ && cd $LAB_USER_HOME/.vim/autoload && \
     wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
-    vim +PluginInstall +qall
+    vim +PlugInstall +qall
 
-RUN mamba init fish && \
-    fish fish_install.fish && \
+RUN mamba init fish 
+RUN mamba install -y curl -c conda-forge
+RUN fish fish_install.fish && \
     cat $LAB_USER_HOME/config.fish >> $LAB_USER_HOME/.config/fish/config.fish
 
 USER root

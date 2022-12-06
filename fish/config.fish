@@ -21,3 +21,9 @@ end
 if type -q trash
     alias rm="trash"
 end
+if test -d $HOME/go/bin/
+     fish_add_path $HOME/go/bin/
+end
+if test -d $HOME/.cargo/
+     fish_add_path $HOME/.cargo/bin/
+end
