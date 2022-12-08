@@ -78,12 +78,12 @@ Plug 'vim-syntastic/syntastic'
 
 " Ultisnips - https://github.com/sirver/ultisnips
 Plug 'sirver/ultisnips'
-"
+
 " Snippets repo for Ultisnips
 Plug 'honza/vim-snippets'
 
 " YouCompleteMe - Auto-completion text engine
-Plug 'Valloric/YouCompleteMe'
+" Plug 'Valloric/YouCompleteMe'
 
 " Super Tab - For key-mappings
 Plug 'ervandew/supertab'
@@ -114,9 +114,9 @@ set laststatus=2
 " ===  YouCompleteMe SetUp ===
 
 " make YCM compatible with UltiSnips (using supertab)
-let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-let g:SuperTabDefaultCompletionType = '<C-n>'
+" let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+" let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+" let g:SuperTabDefaultCompletionType = '<C-n>'
 
 " ===  UltiSnips SetUp ===
 

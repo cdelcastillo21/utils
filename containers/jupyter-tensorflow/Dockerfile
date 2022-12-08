@@ -1,27 +1,60 @@
-# FROM ubuntu:20.04
 FROM jupyter/tensorflow-notebook
 
 USER root
 
-# from https://rtfm.co.ua/en/docker-configure-tzdata-and-timezone-during-build/
-ENV TZ=America/Chicago
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-# endfrom
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN ln -fs /usr/share/zoneinfo/America/Chicago /etc/localtime && \
+	apt-get update && \
+        DEBIAN_FRONTEND=noninteractive && \
+	apt-get install -y \
+    	wget \
+	sshfs \
+        mpich \
+	ghostscript graphicsmagick \
+        gdal-bin \
+	ffmpeg \
+	cmake \
+	libxt-dev \
+	netcdf-bin \
+        libxaw7-dev \
+	libhdf5-dev \
+	libnetcdff-dev \
+        libopenmpi-dev \
+	bc \
+	gfortran \
+	libxml2-dev \
+        perl \
+	gcc \
+	g++ \
+	git \
+	tar \
+	gzip \
+	ssh \
+        ca-certificates \
+	zlib1g-dev \
+        libcurl4-openssl-dev \
+        software-properties-common \
+        gnupg2 \
+        lolcat \
+	fortune \
+	tzdata && \
+	dpkg-reconfigure --frontend noninteractive tzdata
+RUN DEBIAN_FRONTEND=noninteractive && \
+    add-apt-repository ppa:o2sh/onefetch && \
+    apt-get update && \
+    apt-get install -y onefetch
 
-RUN apt-get update \
-    && apt-get install -y wget sshfs \
-    mpich ghostscript graphicsmagick \
-    gdal-bin ffmpeg cmake libxt-dev netcdf-bin \
-    libxaw7-dev libhdf5-dev libnetcdff-dev \
-    libopenmpi-dev bc gfortran libxml2-dev \
-    perl gcc g++ git tar gzip ssh \
-    ca-certificates zlib1g-dev \
-    libcurl4-openssl-dev \
-    software-properties-common \
-    lolcat fortune \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && apt-get autoremove -y
+# Install java 
+RUN apt update -y && \
+    apt install -y \ 
+    	openjdk-17-jre-headless \
+	tzdata \
+	neofetch \
+	duf
+
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    apt-get autoremove -y
 
 # Other utilities
 RUN wget https://github.com/dandavison/delta/releases/download/0.14.0/git-delta-musl_0.14.0_amd64.deb && \
@@ -33,24 +66,13 @@ RUN wget https://github.com/bootandy/dust/releases/download/v0.8.3/du-dust_0.8.3
 
 ENV LAB_USER=jovyan
 ENV LAB_USER_HOME=/home/jovyan
+# RUN useradd -rm -d $LAB_USER_HOME -s /bin/bash -g root -G sudo -u 1001 $LAB_USER && \
+RUN echo "${LAB_USER}:foo" | chpasswd
+USER $LAB_USER
+WORKDIR $LAB_USER_HOME
 
-# Copy scripts and such
-COPY --chown=$LAB_USER utils/python/jupyter.yml $LAB_USER_HOME/env.yml
-COPY --chown=$LAB_USER utils/python/requirements.txt $LAB_USER_HOME/requirements.txt
-COPY --chown=$LAB_USER utils/git/gitconfig $LAB_USER_HOME/.gitconfig
-COPY --chown=$LAB_USER utils/fish/config.fish $LAB_USER_HOME/config.fish
-COPY --chown=$LAB_USER utils/fish/fish_greeting.fish $LAB_USER_HOME/fish_greeting.fish
-COPY --chown=$LAB_USER utils/containers/jupyter-tensorflow/vimrc $LAB_USER_HOME/.vimrc
-RUN mkdir $LAB_USER_HOME/.tmux
-COPY --chown=$LAB_USER utils/tmux/gpakosz/tmux.conf $LAB_USER_HOME/.tmux/.tmux.conf 
-COPY --chown=$LAB_USER utils/tmux/gpakosz/tmux.conf.local $LAB_USER_HOME/.tmux.conf.local
-RUN ln -sf $LAB_USER_HOME/.tmux/.tmux.conf $LAB_USER_HOME/.tmux.conf
-COPY --chown=$LAB_USER utils/containers/jupyter-tensorflow/fish_install.fish $LAB_USER_HOME/fish_install.fish
-COPY --chown=$LAB_USER utils/containers/jupyter-tensorflow/entry.sh $LAB_USER_HOME/entry.sh
-# RUN chmod +x $LAB_USER_HOME/entry.sh && ./entry.sh
-
-USER jovyan
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+USER $LAB_USER
+SHELL ["/bin/bash", "-o", "pipefail", "-c", "-i"]
 RUN mamba install -y ptpython \
 		     ipykernel \
 		     nodejs \
@@ -87,7 +109,8 @@ RUN mamba install -y ptpython \
 		     glow \
 		     trash-cli \
 		     ipydrawio \
-		     curl
+		     curl && \
+		     mamba clean --all -f -y
 
 RUN pip install jupyterlab-citation-manager \
 		aquirdturtle_collapsible_headings \
@@ -100,48 +123,36 @@ RUN pip install jupyterlab-citation-manager \
 		jupyterlab-vim \
 		jupyterlab_theme_solarized_dark
 
-RUN jupyter lab build
-# RUN jupyter lab build && \
-#     ipython kernel install --user --name=lab-env
-
+COPY --chown=$LAB_USER utils/containers/ubuntu22/vimrc $LAB_USER_HOME/.vimrc
 RUN mkdir -p $LAB_USER_HOME/.vim/autoload/ && cd $LAB_USER_HOME/.vim/autoload && \
     wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
-    vim +PlugInstall +qall
+    vim +PlugInstall +qall && \
+    go env -w "CC=gcc" && \
+    go env -w "CXX=g++" && \
+    cd $LAB_USER_HOME/.vim/plugged/YouCompleteMe && \
+    python install.py --all
 
-RUN mamba init fish 
-RUN mamba install -y curl -c conda-forge
+RUN jupyter lab build
+
+ENV PATH="/usr/games/:${PATH}"
+COPY --chown=$LAB_USER utils/containers/jupyter-minimal/config.fish $LAB_USER_HOME/.config/fish/config.fish
+COPY --chown=$LAB_USER utils/containers/jupyter-minimal/fish_install.fish $LAB_USER_HOME/fish_install.fish
 RUN fish fish_install.fish && \
-    cat $LAB_USER_HOME/config.fish >> $LAB_USER_HOME/.config/fish/config.fish
+    rm $LAB_USER_HOME/fish_install.fish
+COPY --chown=$LAB_USER utils/containers/jupyter-minimal/fish_greeting.fish $LAB_USER_HOME/.config/fish/functions/fish_greeting.fish
+COPY --chown=$LAB_USER utils/containers/jupyter-minimal/fish_variables $LAB_USER_HOME/.config/fish/fish_variables
+
+# tmux set-up
+RUN mkdir -p $LAB_USER_HOME/.tmux
+COPY --chown=$LAB_USER utils/tmux/gpakosz/tmux.conf $LAB_USER_HOME/.tmux/.tmux.conf 
+COPY --chown=$LAB_USER utils/tmux/gpakosz/tmux.conf.local $LAB_USER_HOME/.tmux/.tmux.conf.local
+RUN cd $LAB_USER_HOME && \ 
+    ln -sf $LAB_USER_HOME/.tmux/.tmux.conf . && \
+    ln -sf $LAB_USER_HOME/.tmux/.tmux.conf.local .
+
+COPY --chown=$LAB_USER utils/git/gitconfig $LAB_USER_HOME/.gitconfig
+
+RUN echo "fish" >> $LAB_USER_HOME/.bashrc
 
 USER root
-
-# 
-# # ADCIRC Local Install
-# # COPY adcirc adcirc
-# # RUN mkdir -p adcirc/build && cd adcirc/build && cmake .. \
-# # 	     -DCMAKE_C_COMPILER=mpicc \
-# # 	     -DCMAKE_CXX_COMPILER=mpicxx \
-# # 	     -DCMAKE_Fortran_COMPILER=gfortran \
-# # 	     -DENABLE_GRIB2=OFF \
-# # 	     -DENABLE_DATETIME=ON \
-# # 	     -DENABLE_OUTPUT_NETCDF=ON \
-# # 	     -DBUILD_ADCPREP=ON \
-# # 	     -DBUILD_PADCIRC=ON && make -j6
-# # ENV PATH="/adcirc/build:${PATH}"
-# # 
-# # # FigureGen Local Install
-# # RUN mkdir -p /data
-# # RUN wget ftp://ftp.soest.hawaii.edu/gmt/gmt-4.5.18-src.tar.bz2 \
-# #     && tar -xf gmt-4.5.18-src.tar.bz2 && cd gmt-4.5.18/ \
-# #     && ./configure --enable-netcdf && make && make install-gmt \
-# #     && make install-data && make clean \
-# #     && wget ftp://ftp.soest.hawaii.edu/gshhg/gshhg-gmt-2.3.7.tar.gz \
-# #     && tar -zxvf gshhg-gmt-2.3.7.tar.gz \
-# #     && cd share && mkdir coast && cd coast && mv /gmt-4.5.18/gshhg-gmt-2.3.7/* .
-# # COPY FigureGen/FigureGen.F90 figuregen/
-# # COPY FigureGen/cmake/FindNetCDF.cmake figuregen/cmake/
-# # COPY FigureGen/CMakeLists.txt figuregen/
-# # RUN cd figuregen && ls && mkdir build && cd build \
-# #     && cmake .. -DCMAKE_Fortran_COMPILER=mpif90 -DUSE_MPI=ON -DUSE_NETCDF=ON && make
-# # ENV PATH="/figuregen/build:/gmt-4.5.18/bin:${PATH}"
 

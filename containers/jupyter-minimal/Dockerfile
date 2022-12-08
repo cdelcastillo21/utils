@@ -123,7 +123,7 @@ RUN pip install jupyterlab-citation-manager \
 		jupyterlab-vim \
 		jupyterlab_theme_solarized_dark
 
-COPY utils/containers/jupyter-minimal/vimrc $LAB_USER_HOME/.vimrc
+COPY --chown=$LAB_USER utils/containers/ubuntu22/vimrc $LAB_USER_HOME/.vimrc
 RUN mkdir -p $LAB_USER_HOME/.vim/autoload/ && cd $LAB_USER_HOME/.vim/autoload && \
     wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
     vim +PlugInstall +qall && \
