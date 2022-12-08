@@ -1,5 +1,4 @@
 FROM ubuntu:20.04
-# FROM jupyter/tensorflow-notebook
 
 # from https://rtfm.co.ua/en/docker-configure-tzdata-and-timezone-during-build/
 ENV TZ=America/Chicago
@@ -58,31 +57,31 @@ RUN cd figuregen && ls && mkdir build && cd build \
     && cmake .. -DCMAKE_Fortran_COMPILER=mpif90 -DUSE_MPI=ON -DUSE_NETCDF=ON && make
 ENV PATH="/figuregen/build:/gmt-4.5.18/bin:${PATH}"
 
-ENV LAB_USER=dev
-ENV LAB_USER_HOME=/home/dev
-ENV LAB_PSW=$psw
-RUN useradd -rm -d $LAB_USER_HOME -s /bin/bash -g root -G sudo -u 1001 $LAB_USER && \
-    echo "${LAB_USER}:foo" | chpasswd
-USER $LAB_USER
-WORKDIR $LAB_USER_HOME
-ENV LAB_PSW=
-
-# Copy scripts and such
-COPY --chown=$LAB_USER utils/python/jupyter.yml env.yml
-COPY --chown=$LAB_USER utils/python/requirements.txt requirements.txt
-COPY --chown=$LAB_USER utils/git/gitconfig $LAB_USER_HOME/.gitconfig
-COPY --chown=$LAB_USER utils/fish/config.fish $LAB_USER_HOME/config.fish
-COPY --chown=$LAB_USER utils/fish/fish_greeting.fish $LAB_USER_HOME/fish_greeting.fish
-COPY --chown=$LAB_USER utils/containers/ubuntu20/vimrc $LAB_USER_HOME/vimrc
-COPY --chown=$LAB_USER utils/tmux/gpakosz/tmux.conf $LAB_USER_HOME/tmux.conf 
-COPY --chown=$LAB_USER utils/tmux/gpakosz/tmux.conf.local $LAB_USER_HOME/tmux.conf.local
-COPY --chown=$LAB_USER utils/containers/ubuntu20/fish_install.fish $LAB_USER_HOME/fish_install.fish
-COPY --chown=$LAB_USER utils/containers/ubuntu20/entry.sh $LAB_USER_HOME/entry.sh
-
-USER root 
-RUN apt update && apt install curl
-USER $LAB_USER
-RUN chmod +x $LAB_USER_HOME/entry.sh && ./entry.sh
-USER root 
-RUN apt update && apt install curl
-
+# ENV LAB_USER=dev
+# ENV LAB_USER_HOME=/home/dev
+# ENV LAB_PSW=$psw
+# RUN useradd -rm -d $LAB_USER_HOME -s /bin/bash -g root -G sudo -u 1001 $LAB_USER && \
+#     echo "${LAB_USER}:foo" | chpasswd
+# USER $LAB_USER
+# WORKDIR $LAB_USER_HOME
+# ENV LAB_PSW=
+# 
+# # Copy scripts and such
+# COPY --chown=$LAB_USER utils/python/jupyter.yml env.yml
+# COPY --chown=$LAB_USER utils/python/requirements.txt requirements.txt
+# COPY --chown=$LAB_USER utils/git/gitconfig $LAB_USER_HOME/.gitconfig
+# COPY --chown=$LAB_USER utils/fish/config.fish $LAB_USER_HOME/config.fish
+# COPY --chown=$LAB_USER utils/fish/fish_greeting.fish $LAB_USER_HOME/fish_greeting.fish
+# COPY --chown=$LAB_USER utils/containers/ubuntu20/vimrc $LAB_USER_HOME/vimrc
+# COPY --chown=$LAB_USER utils/tmux/gpakosz/tmux.conf $LAB_USER_HOME/tmux.conf 
+# COPY --chown=$LAB_USER utils/tmux/gpakosz/tmux.conf.local $LAB_USER_HOME/tmux.conf.local
+# COPY --chown=$LAB_USER utils/containers/ubuntu20/fish_install.fish $LAB_USER_HOME/fish_install.fish
+# COPY --chown=$LAB_USER utils/containers/ubuntu20/entry.sh $LAB_USER_HOME/entry.sh
+# 
+# USER root 
+# RUN apt update && apt install curl
+# USER $LAB_USER
+# RUN chmod +x $LAB_USER_HOME/entry.sh && ./entry.sh
+# USER root 
+# RUN apt update && apt install curl
+# 

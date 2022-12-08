@@ -5,12 +5,12 @@ RUN apt-get update \
 
 RUN mkdir -p /data
 
-RUN wget ftp://ftp.soest.hawaii.edu/gmt/gmt-4.5.18-src.tar.bz2 \
+run wget ftp://ftp.star.nesdis.noaa.gov/pub/sod/lsa/gmt/gmt-4.5.18-src.tar.bz2 && \
     && tar -xf gmt-4.5.18-src.tar.bz2 && cd gmt-4.5.18/ \
     && ./configure --enable-netcdf && make && make install-gmt \
-    && make install-data && make clean \
-    && wget ftp://ftp.soest.hawaii.edu/gshhg/gshhg-gmt-2.3.7.tar.gz \
-    && tar -zxvf gshhg-gmt-2.3.7.tar.gz \
+    && make install-data && make clean && \
+    wget https://fossies.org/linux/misc/GMT/gshhg-gmt-2.3.7.tar.gz && \
+    tar -zxvf gshhg-gmt-2.3.7.tar.gz \
     && cd share && mkdir coast && cd coast && mv /gmt-4.5.18/gshhg-gmt-2.3.7/* .
 
 COPY FigureGen/FigureGen.F90 figuregen/
