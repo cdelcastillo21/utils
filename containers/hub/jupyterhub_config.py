@@ -26,9 +26,9 @@ c.Spawner.default_url = '/lab'
 # in jupyterhub_config.py
 c.JupyterHub.load_roles = [{'name': 'server-rights','description': 'Allows parties to start and stop user servers','scopes': ['servers'],'users': ['carlos'],'services': [],'groups': ['admin-group'],}]
 
-notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home2'
+notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
 c.DockerSpawner.notebook_dir = notebook_dir
-c.DockerSpawner.volumes = {'/home/': '/home2/'}
+c.DockerSpawner.volumes = {'/home/carlos': '/home/jovyan/carlos'}
 # if Path('/Volumes/DataDrive/').exists():
 #     c.DockerSpawner.volumes['/Volumes/DataDrive/'] = '/home/DataDrive'
 

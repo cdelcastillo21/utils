@@ -2,11 +2,11 @@
 if status is-interactive
     # Commands to run in interactive sessions can go here
     fish_vi_key_bindings
-    eval /home/dev/mambaforge/bin/conda "shell.fish" "hook" $argv | source
+    eval /home/carlos/mambaforge/bin/conda "shell.fish" "hook" $argv | source
 end
 
-if test -f "/home/dev/mambaforge/etc/fish/conf.d/mamba.fish"
-	source "/home/dev/mambaforge/etc/fish/conf.d/mamba.fish"
+if test -f "/home/carlos/mambaforge/etc/fish/conf.d/mamba.fish"
+	source "/home/carlos/mambaforge/etc/fish/conf.d/mamba.fish"
 end
 # <<< conda initialize <<<
 
@@ -33,4 +33,15 @@ if test -d $HOME/go/bin/
 end
 if test -d $HOME/.cargo/
      fish_add_path $HOME/.cargo/bin/
+end
+
+if type -q nvm
+    nvm install &> /dev/null
+end
+
+if type -q tmux
+    if status is-interactive
+    	and not set -q TMUX
+        exec tmux new-session -s dev-box-(tmux ls | count)
+    end
 end

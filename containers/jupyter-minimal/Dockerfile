@@ -39,7 +39,8 @@ RUN ln -fs /usr/share/zoneinfo/America/Chicago /etc/localtime && \
 	fortune \
 	tzdata && \
 	dpkg-reconfigure --frontend noninteractive tzdata
-RUN add-apt-repository ppa:o2sh/onefetch && \
+RUN DEBIAN_FRONTEND=noninteractive && \
+    add-apt-repository ppa:o2sh/onefetch && \
     apt-get update && \
     apt-get install -y onefetch
 
@@ -139,7 +140,7 @@ COPY --chown=$LAB_USER utils/containers/jupyter-minimal/fish_install.fish $LAB_U
 RUN fish fish_install.fish && \
     rm $LAB_USER_HOME/fish_install.fish
 COPY --chown=$LAB_USER utils/containers/jupyter-minimal/fish_greeting.fish $LAB_USER_HOME/.config/fish/functions/fish_greeting.fish
-# COPY --chown=$LAB_USER utils/containers/jupyter-minimal/fish_variables $LAB_USER_HOME/.config/fish/fish_variables
+COPY --chown=$LAB_USER utils/containers/jupyter-minimal/fish_variables $LAB_USER_HOME/.config/fish/fish_variables
 
 # tmux set-up
 RUN mkdir -p $LAB_USER_HOME/.tmux
