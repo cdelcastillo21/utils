@@ -9,7 +9,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - jupyterhub_data:/srv/jupyterlab
     environment:                      # Env variables passed to hub process
-      DOCKER_JUPYTER_IMAGE: clos21/dev-box-jupyter:adcirc
+      DOCKER_JUPYTER_IMAGE: clos21/jupyter-tf-adcirc:latest
       DOCKER_NETWORK_NAME: ${COMPOSE_PROJECT_NAME}_default
       HUB_IP: jupyterhub_hub
     ports:
@@ -17,7 +17,7 @@ services:
     restart: unless-stopped
 
   jupyterlab:
-    image: clos21/dev-box-jupyter:adcirc
+    image: clos21/jupyter-tf-adcirc:latest
     command: echo "Here"
 
 volumes:

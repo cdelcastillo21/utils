@@ -28,7 +28,8 @@ c.JupyterHub.load_roles = [{'name': 'server-rights','description': 'Allows parti
 
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
 c.DockerSpawner.notebook_dir = notebook_dir
-c.DockerSpawner.volumes = {'/home/carlos': '/home/jovyan/carlos'}
+c.DockerSpawner.volumes = {'jupyterhub-user-carlos': notebook_dir,
+                           '/home/carlos': {'bind': '/home/shared'}}
 # if Path('/Volumes/DataDrive/').exists():
 #     c.DockerSpawner.volumes['/Volumes/DataDrive/'] = '/home/DataDrive'
 
