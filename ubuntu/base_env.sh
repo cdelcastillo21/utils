@@ -44,7 +44,6 @@ sudo add-apt-repository -y ppa:o2sh/onefetch && \
 sudo apt update -y
 sudo apt install -y openjdk-17-jre-headless
 sudo apt install -y neofetch
-sudo apt install -y duf
 
 sudo apt-get clean && \
     sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
@@ -57,6 +56,9 @@ wget https://github.com/dandavison/delta/releases/download/0.14.0/git-delta-musl
 wget https://github.com/bootandy/dust/releases/download/v0.8.3/du-dust_0.8.3_amd64.deb && \
     sudo dpkg -i du-dust_0.8.3_amd64.deb && \
     rm du-dust_0.8.3_amd64.deb
+wget https://github.com/muesli/duf/releases/download/v0.8.1/duf_0.8.1_linux_amd64.deb
+    sudo dpkg -i duf_0.8.1_linux_amd64.deb && \
+    rm duf_0.8.1_linux_amd64.deb 
 
 mamba install -y ptpython \
 		 ipykernel \

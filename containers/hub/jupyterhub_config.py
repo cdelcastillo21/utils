@@ -26,11 +26,13 @@ c.Spawner.default_url = '/lab'
 # in jupyterhub_config.py
 c.JupyterHub.load_roles = [{'name': 'server-rights','description': 'Allows parties to start and stop user servers','scopes': ['servers'],'users': ['carlos'],'services': [],'groups': ['admin-group'],}]
 
-notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
+
+notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
 c.DockerSpawner.notebook_dir = notebook_dir
-c.DockerSpawner.volumes = {'jupyterhub-user-carlos': notebook_dir,
-                           '/home/carlos': {'bind': '/home/shared'}}
-# if Path('/Volumes/DataDrive/').exists():
-#     c.DockerSpawner.volumes['/Volumes/DataDrive/'] = '/home/DataDrive'
+c.DockerSpawner.volumes = {'jupyterhub-user-carlos': notebook_dir}
+c.DockerSpawner.image_whitelist = {'minimal': 'clos21/jlab',
+                                   'adcirc': 'clos21/jlab-adcirc',
+                                   'tensorflow': 'clos21/jlab-tf',
+                                   'tensorflow-adcirc': 'clos21/jlab-adcirc'}
 
 c.LatexConfig.latex_command = 'latexmk'

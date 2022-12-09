@@ -115,8 +115,7 @@ RUN apt update -y && \
     apt install -y \ 
     	openjdk-17-jre-headless \
 	tzdata \
-	neofetch \
-	duf
+	neofetch
 
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
@@ -129,6 +128,9 @@ RUN wget https://github.com/dandavison/delta/releases/download/0.14.0/git-delta-
 RUN wget https://github.com/bootandy/dust/releases/download/v0.8.3/du-dust_0.8.3_amd64.deb && \
     dpkg -i du-dust_0.8.3_amd64.deb && \
     rm du-dust_0.8.3_amd64.deb
+RUN wget https://github.com/muesli/duf/releases/download/v0.8.1/duf_0.8.1_linux_amd64.deb && \
+    sudo dpkg -i duf_0.8.1_linux_amd64.deb && \
+    rm duf_0.8.1_linux_amd64.deb 
 
 ENV LAB_USER=jovyan
 ENV LAB_USER_HOME=/home/jovyan
@@ -202,10 +204,10 @@ RUN jupyter lab build
 
 ENV PATH="/usr/games/:${PATH}"
 COPY --chown=$LAB_USER utils/containers/jupyter-minimal/config.fish $LAB_USER_HOME/.config/fish/config.fish
-COPY --chown=$LAB_USER utils/containers/jupyter-minimal/fish_install.fish $LAB_USER_HOME/fish_install.fish
+COPY --chown=$LAB_USER utils/fish/fish_install.fish $LAB_USER_HOME/fish_install.fish
 RUN fish fish_install.fish && \
     rm $LAB_USER_HOME/fish_install.fish
-COPY --chown=$LAB_USER utils/containers/jupyter-minimal/fish_greeting.fish $LAB_USER_HOME/.config/fish/functions/fish_greeting.fish
+COPY --chown=$LAB_USER utils/fish/fish_greeting.fish $LAB_USER_HOME/.config/fish/functions/fish_greeting.fish
 COPY --chown=$LAB_USER utils/containers/jupyter-minimal/fish_variables $LAB_USER_HOME/.config/fish/fish_variables
 
 # tmux set-up
