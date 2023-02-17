@@ -64,8 +64,9 @@ RUN mkdir -p adcirc/build && cd adcirc/build && cmake .. \
 	     -DBUILD_PADCIRC=ON \
 	     -DBUILD_ADCSWAN=ON \
 	     -DBUILD_PADCSWAN=ON \
-	     && make -j6 && \
-	     mv adcirc padcirc adcprep adcswan padcswan /usr/bin/
+	     && make -j6
+
+ENV PATH="/adcirc/build:${PATH}"
 
 WORKDIR /home/jovyan
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]

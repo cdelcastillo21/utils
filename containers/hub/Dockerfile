@@ -7,3 +7,6 @@ RUN pip install dockerspawner
 
 RUN adduser carlos
 RUN echo carlos:foo | chpasswd
+
+RUN adduser clos
+RUN echo clos:foo | chpasswd

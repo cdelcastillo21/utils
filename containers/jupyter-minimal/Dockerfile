@@ -68,6 +68,7 @@ RUN wget https://github.com/muesli/duf/releases/download/v0.8.1/duf_0.8.1_linux_
 
 ENV LAB_USER=jovyan
 ENV LAB_USER_HOME=/home/jovyan
+ENV WORK=/home/jovyan/work
 # RUN useradd -rm -d $LAB_USER_HOME -s /bin/bash -g root -G sudo -u 1001 $LAB_USER && \
 RUN echo "${LAB_USER}:foo" | chpasswd
 USER $LAB_USER
@@ -107,14 +108,17 @@ RUN mamba install -y ptpython \
 		     hyperfine \
 		     httpie \
 		     broot \
+         	     bpytop
 		     tokei \
+		     rust \
 		     glow \
 		     trash-cli \
 		     ipydrawio \
 		     curl && \
 		     mamba clean --all -f -y
 
-RUN pip install jupyterlab-citation-manager \
+RUN pip install httpie \
+		jupyterlab-citation-manager \
 		aquirdturtle_collapsible_headings \
 		ipympl \
 		jupyterlab_code_formatter \
