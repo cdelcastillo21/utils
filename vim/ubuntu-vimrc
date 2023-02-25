@@ -196,6 +196,13 @@ fu Tab_style_2space()
   set softtabstop=2
 endf
 
+fu Tab_style_4space()
+  set shiftwidth=4
+  set expandtab
+  set tabstop=4
+  set softtabstop=4
+endf
+
 fu Pep_max_line()
   set colorcolumn=80
 endf
@@ -230,7 +237,7 @@ let python_highlight_all=1
  
 " C: prevents insertion of '*' at the beginning of every line in a comment
 au BufRead,BufNewFile *.c,*.h set formatoptions-=c formatoptions-=o formatoptions-=r
-au BufRead,BufNewFile *py,*pyw,*.md call Tab_style_2space()
+au BufRead,BufNewFile *py,*pyw,*.md call Tab_style_4space()
 au BufRead,BufNewFile *py,*pyw, call Pep_max_line()
 
 " Display tabs at the beginning of a line in Python mode as bad.

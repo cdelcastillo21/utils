@@ -20,7 +20,7 @@ if type -q exa
     alias lsty="exa -l -h --git --tree -L 1 -F --icons --sort=type"
 end
 if type -q delta
-    alias diff="delta --side-by-side=True"
+    alias diff="delta --side-by-side"
 end
 if type -q vim
     set -Ux EDITOR vim
