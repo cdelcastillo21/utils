@@ -40,7 +40,7 @@ mamba install -n dev -y ptpython \
                         hyperfine \
                         httpie \
                         broot \
-                         bpytop
+                        bpytop \
                         tokei \
                         rust \
                         glow \
