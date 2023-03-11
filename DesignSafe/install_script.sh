@@ -5,7 +5,7 @@ REPOS=~/MyData/repos
 
 
 # Create base conda dev environment
-conda update -n base conda
+conda update -n base -y conda
 conda create -n dev -y
 conda activate dev
 
@@ -60,7 +60,7 @@ cargo install onefetch
 
 # Configure VIM
 cd $REPOS && \
-    cp utils/vim/ubuntu-vimrc ~/.vimrc && \
+    cp utils/DesignSafe/vimrc ~/.vimrc && \
     mkdir -p ~/.vim/autoload/ && cd ~/.vim/autoload && \
     wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
     vim +PlugInstall +qall && \
@@ -72,8 +72,8 @@ cd $REPOS && \
 
 # Configure fish shell
 cd $REPOS && \
-  cp  utils/DesignSafe/config.fish ~/.config/fish/config.fish && \
   fish utils/fish/fish_install.fish && \
+  cp  utils/DesignSafe/config.fish ~/.config/fish/config.fish && \
   cp utils/DesignSafe/fish_greeting.fish ~/.config/fish/functions/fish_greeting.fish && \
   cp utils/DesignSafe/fish_variables ~/.config/fish/fish_variables && \
   cp utils/git/gitconfig ~/.gitconfig && \
