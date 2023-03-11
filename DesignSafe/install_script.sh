@@ -3,10 +3,47 @@
 
 REPOS=~/MyData/repos
 
-
 # update base environment 
 conda update -n base -y conda
-mamba install -y fish
+
+# Configure dev environment 
+conda create -n dev -y
+conda activate dev
+mamba install -y fish \
+	 	 ptpython \
+                 ipykernel \
+                 nodejs \
+                 jupyterlab \
+                 flake8 \
+                 black \
+                 isort \
+                 autopep8 \
+                 ipympl \
+                 yapf \
+                 python-lsp-server  \
+                 tmux \
+                 vim \
+                 cmake \
+                 go \
+                 jq \
+                 lazygit \
+                 fzf \
+                 htop \
+                 exa \
+                 ripgrep \
+                 the_silver_searcher \
+                 bat \
+                 hyperfine \
+                 httpie \
+                 broot \
+                 bpytop \
+                 tokei \
+                 rust \
+                 glow \
+                 trash-cli \
+                 ipydrawio \
+                 curl \
+                 rust
 
 # Configure fish shell
 cd $REPOS && \
@@ -16,60 +53,13 @@ cd $REPOS && \
   cp utils/git/gitconfig ~/.gitconfig && \
   cp utils/fortunes.txt ~/.config/fish/fortunes.txt && \
   conda init fish
+
 # cp utils/DesignSafe/fish_variables ~/.config/fish/fish_variables && \
-
-exit 1
-
-# Configure dev environment 
-conda create -n dev -y
-conda activate dev
-mamba install -n dev -y ptpython \
-                        ipykernel \
-                        nodejs \
-                        jupyterlab \
-                        flake8 \
-                        black \
-                        isort \
-                        autopep8 \
-                        ipympl \
-                        yapf \
-                        jupyter_bokeh \
-                        jupyterlab-lsp \
-                        python-lsp-server  \
-                        jupyterlab-git \
-                        jupyterlab-spellchecker \
-                        jlab-enhanced-cell-toolbar \
-                        tmux \
-                        vim \
-                        cmake \
-                        go \
-                        jq \
-                        lazygit \
-                        fzf \
-                        htop \
-                        exa \
-                        ripgrep \
-                        the_silver_searcher \
-                        bat \
-                        hyperfine \
-                        httpie \
-                        broot \
-                        bpytop \
-                        tokei \
-                        rust \
-                        glow \
-                        trash-cli \
-                        ipydrawio \
-                        curl \
-                        rust
-
 
 # Python pip packages
 pip install ipykernel \
 	    httpie \
-	    ipympl \
-
-cargo install onefetch
+	    ipympl
 
 # Configure VIM
 cd $REPOS && \
@@ -91,6 +81,13 @@ cd $REPOS && \
   ln -sf ~/.tmux/.tmux.conf . && \
   ln -sf ~/.tmux/.tmux.conf.local .
 
+## UTILITIES
+
+# ls replacement
+cargo install exa
+
+# For viewing github repo statistics
+cargo install onefetch
 
 # neofetch - system info utility (
 cd $REPOS && \
@@ -112,6 +109,12 @@ cd $REPOS && \
   rm -rf duf
 
 # Jupyter setup -> Don'y have permissions in DesignSafe to build juptyer lab so this will fail
+# mamba install -n dev -y jupyter_bokeh \
+#                         jupyterlab-lsp \
+#                         python-lsp-server  \
+#                         jupyterlab-git \
+#                         jupyterlab-spellchecker \
+#                         jlab-enhanced-cell-toolbar \
 # pip install jupyterlab-citation-manager \
 #             aquirdturtle_collapsible_headings \
 #             jupyterlab_code_formatter \
