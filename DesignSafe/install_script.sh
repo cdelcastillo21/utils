@@ -5,8 +5,8 @@ REPOS=~/MyData/repos
 
 
 # Create base conda dev environment
-conda create -n dev -y && \
-  conda activate dev
+conda create -n dev -y
+conda activate dev
 
 mamba install -n dev -y ptpython \
                         ipykernel \
