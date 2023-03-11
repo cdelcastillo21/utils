@@ -5,7 +5,7 @@ REPOS=~/MyData/repos
 
 
 # Create base conda dev environment
-mamba create -n dev -y && \
+conda create -n dev -y && \
   mamba install -n dev -y ptpython \
                         ipykernel \
                         nodejs \
