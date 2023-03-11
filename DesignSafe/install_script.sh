@@ -6,7 +6,9 @@ REPOS=~/MyData/repos
 
 # Create base conda dev environment
 conda create -n dev -y && \
-  mamba install -n dev -y ptpython \
+  conda activate dev
+
+mamba install -n dev -y ptpython \
                         ipykernel \
                         nodejs \
                         jupyterlab \
@@ -48,7 +50,6 @@ conda create -n dev -y && \
                         rust && \
                         mamba clean --all -f -y
 
-conda activate dev
 
 # Python pip packages
 pip install ipykernel \
