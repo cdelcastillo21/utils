@@ -5,6 +5,7 @@ REPOS=~/MyData/repos
 
 
 # Create base conda dev environment
+conda update -n base conda
 conda create -n dev -y
 conda activate dev
 
@@ -47,8 +48,7 @@ mamba install -n dev -y ptpython \
                         trash-cli \
                         ipydrawio \
                         curl \
-                        rust && \
-                        mamba clean --all -f -y
+                        rust
 
 
 # Python pip packages
@@ -60,7 +60,7 @@ cargo install onefetch
 
 # Configure VIM
 cd $REPOS && \
-    cp utils/vim/ubuntu-vimrc && \
+    cp utils/vim/ubuntu-vimrc ~/.vimrc && \
     mkdir -p ~/.vim/autoload/ && cd ~/.vim/autoload && \
     wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
     vim +PlugInstall +qall && \
