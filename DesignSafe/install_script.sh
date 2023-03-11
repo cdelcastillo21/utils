@@ -7,6 +7,7 @@ REPOS=~/MyData/repos
 # Create base conda dev environment
 conda update -n base -y conda
 conda create -n dev -y
+
 conda activate dev
 
 mamba install -n dev -y ptpython \
@@ -73,11 +74,12 @@ cd $REPOS && \
 # Configure fish shell
 cd $REPOS && \
   fish utils/fish/fish_install.fish && \
-  cp  utils/DesignSafe/config.fish ~/.config/fish/config.fish && \
+  cp utils/DesignSafe/config.fish ~/.config/fish/config.fish && \
   cp utils/DesignSafe/fish_greeting.fish ~/.config/fish/functions/fish_greeting.fish && \
   cp utils/DesignSafe/fish_variables ~/.config/fish/fish_variables && \
   cp utils/git/gitconfig ~/.gitconfig && \
-  cp utils/fortunes.txt ~/.config/fish/fortunes.txt
+  cp utils/fortunes.txt ~/.config/fish/fortunes.txt && \
+  conda init fish
 
 # tmux set-up
 cd $REPOS && \
@@ -123,5 +125,3 @@ cd $REPOS && \
 # Install dev environment as a kernel
 ipython kernel install --user --name=dev
 
-# Start fish shell in environment always
-echo "conda activate dev && fish" >> ~/.bashrc
