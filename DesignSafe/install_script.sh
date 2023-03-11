@@ -54,6 +54,7 @@ pip install ipykernel httpie \
 ipython kernel install --user --name=dev
 
 
+cp utils/vim/ubuntu-vimrc
 mkdir -p ~/.vim/autoload/ && cd ~/.vim/autoload && \
     wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
     vim +PlugInstall +qall && \
@@ -65,17 +66,17 @@ mkdir -p ~/.vim/autoload/ && cd ~/.vim/autoload && \
 # Don'y have permissions in DesignSafe
 # jupyter lab build
 
+cd ~/MyData/repos
 cp  utils/containers/jupyter-minimal/config.fish ~/.config/fish/config.fish
-fish utils/fish/fish_install.fish && \
-     rm ~/fish_install.fish
+fish utils/fish/fish_install.fish
 cp utils/fish/fish_greeting.fish ~/.config/fish/functions/fish_greeting.fish
-cp utils/containers/jupyter-minimal/fish_variables ~/.config/fish/fish_variables
+# cp utils/containers/jupyter-minimal/fish_variables ~/.config/fish/fish_variables
 
 # tmux set-up
 mkdir -p ~/.tmux
 cp utils/tmux/gpakosz/tmux.conf ~/.tmux/.tmux.conf 
 cp utils/tmux/gpakosz/tmux.conf.local ~/.tmux/.tmux.conf.local
-RUN cd ~ && \ 
+cd ~ && \ 
     ln -sf ~/.tmux/.tmux.conf . && \
     ln -sf ~/.tmux/.tmux.conf.local .
 
