@@ -4,12 +4,25 @@
 REPOS=~/MyData/repos
 
 
-# Create base conda dev environment
+# update base environment 
 conda update -n base -y conda
+mamba install -y fish
+
+# Configure fish shell
+cd $REPOS && \
+  fish utils/fish/fish_install.fish && \
+  cp utils/DesignSafe/config.fish ~/.config/fish/config.fish && \
+  cp utils/DesignSafe/fish_greeting.fish ~/.config/fish/functions/fish_greeting.fish && \
+  cp utils/git/gitconfig ~/.gitconfig && \
+  cp utils/fortunes.txt ~/.config/fish/fortunes.txt && \
+  conda init fish
+# cp utils/DesignSafe/fish_variables ~/.config/fish/fish_variables && \
+
+exit 1
+
+# Configure dev environment 
 conda create -n dev -y
-
 conda activate dev
-
 mamba install -n dev -y ptpython \
                         ipykernel \
                         nodejs \
@@ -26,7 +39,6 @@ mamba install -n dev -y ptpython \
                         jupyterlab-git \
                         jupyterlab-spellchecker \
                         jlab-enhanced-cell-toolbar \
-                        fish \
                         tmux \
                         vim \
                         cmake \
@@ -69,17 +81,6 @@ cd $REPOS && \
     go env -w "CXX=g++" && \
     cd ~/.vim/plugged/YouCompleteMe && \
     python install.py --all
-
-
-# Configure fish shell
-cd $REPOS && \
-  fish utils/fish/fish_install.fish && \
-  cp utils/DesignSafe/config.fish ~/.config/fish/config.fish && \
-  cp utils/DesignSafe/fish_greeting.fish ~/.config/fish/functions/fish_greeting.fish && \
-  cp utils/DesignSafe/fish_variables ~/.config/fish/fish_variables && \
-  cp utils/git/gitconfig ~/.gitconfig && \
-  cp utils/fortunes.txt ~/.config/fish/fortunes.txt && \
-  conda init fish
 
 # tmux set-up
 cd $REPOS && \
@@ -125,3 +126,4 @@ cd $REPOS && \
 # Install dev environment as a kernel
 ipython kernel install --user --name=dev
 
+echo "alias st-dev='conda activate dev && fish'" >> ~/.bashrc
