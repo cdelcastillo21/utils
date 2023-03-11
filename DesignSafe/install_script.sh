@@ -5,47 +5,48 @@ REPOS=~/MyData/repos
 
 
 # Create base conda dev environment
-mamba install -n dev -y ptpython \
-		     ipykernel \
-		     nodejs \
-		     jupyterlab \
-		     flake8 \
-		     black \
-		     isort \
-		     autopep8 \
-		     ipympl \
-		     yapf \
-		     jupyter_bokeh \
-		     jupyterlab-lsp \
-		     python-lsp-server  \
-		     jupyterlab-git \
-		     jupyterlab-spellchecker \
-		     jlab-enhanced-cell-toolbar \
-		     fish \
-		     tmux \
-		     vim \
-		     cmake \
-		     go \
-		     jq \
-		     lazygit \
-		     fzf \
-		     htop \
-		     exa \
-		     ripgrep \
-		     the_silver_searcher \
-		     bat \
-		     hyperfine \
-		     httpie \
-		     broot \
-         	     bpytop
-		     tokei \
-		     rust \
-		     glow \
-		     trash-cli \
-		     ipydrawio \
-		     curl \
-		     rust && \
-		     mamba clean --all -f -y
+mamba create -n dev -y && \
+  mamba install -n dev -y ptpython \
+                        ipykernel \
+                        nodejs \
+                        jupyterlab \
+                        flake8 \
+                        black \
+                        isort \
+                        autopep8 \
+                        ipympl \
+                        yapf \
+                        jupyter_bokeh \
+                        jupyterlab-lsp \
+                        python-lsp-server  \
+                        jupyterlab-git \
+                        jupyterlab-spellchecker \
+                        jlab-enhanced-cell-toolbar \
+                        fish \
+                        tmux \
+                        vim \
+                        cmake \
+                        go \
+                        jq \
+                        lazygit \
+                        fzf \
+                        htop \
+                        exa \
+                        ripgrep \
+                        the_silver_searcher \
+                        bat \
+                        hyperfine \
+                        httpie \
+                        broot \
+                         bpytop
+                        tokei \
+                        rust \
+                        glow \
+                        trash-cli \
+                        ipydrawio \
+                        curl \
+                        rust && \
+                        mamba clean --all -f -y
 
 conda activate dev
 
