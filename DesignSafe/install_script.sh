@@ -1,3 +1,10 @@
+#!/bin/bash -i 
+#
+
+REPOS=~/MyData/repos
+
+
+# Create base conda dev environment
 mamba install -n dev -y ptpython \
 		     ipykernel \
 		     nodejs \
@@ -36,26 +43,23 @@ mamba install -n dev -y ptpython \
 		     glow \
 		     trash-cli \
 		     ipydrawio \
-		     curl && \
+		     curl \
+		     rust && \
 		     mamba clean --all -f -y
 
-pip install ipykernel httpie \
-		jupyterlab-citation-manager \
-		aquirdturtle_collapsible_headings \
-		ipympl \
-		jupyterlab_code_formatter \
-		jupyterlab-topbar  \
-		jupyterlab-topbar-text \
-		jupyterlab-link-share  \
-		jupyterlab_recents \
-		jupyterlab-vim \
-		jupyterlab_theme_solarized_dark
+conda activate dev
 
-ipython kernel install --user --name=dev
+# Python pip packages
+pip install ipykernel \
+	    httpie \
+	    ipympl \
 
+cargo install onefetch
 
-cp utils/vim/ubuntu-vimrc
-mkdir -p ~/.vim/autoload/ && cd ~/.vim/autoload && \
+# Configure VIM
+cd $REPOS && \
+    cp utils/vim/ubuntu-vimrc && \
+    mkdir -p ~/.vim/autoload/ && cd ~/.vim/autoload && \
     wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
     vim +PlugInstall +qall && \
     go env -w "CC=gcc" && \
@@ -63,24 +67,59 @@ mkdir -p ~/.vim/autoload/ && cd ~/.vim/autoload && \
     cd ~/.vim/plugged/YouCompleteMe && \
     python install.py --all
 
-# Don'y have permissions in DesignSafe
-# jupyter lab build
 
-cd ~/MyData/repos
-cp  utils/containers/jupyter-minimal/config.fish ~/.config/fish/config.fish
-fish utils/fish/fish_install.fish
-cp utils/fish/fish_greeting.fish ~/.config/fish/functions/fish_greeting.fish
-# cp utils/containers/jupyter-minimal/fish_variables ~/.config/fish/fish_variables
+# Configure fish shell
+cd $REPOS && \
+  cp  utils/DesignSafe/config.fish ~/.config/fish/config.fish && \
+  fish utils/fish/fish_install.fish && \
+  cp utils/DesignSafe/fish_greeting.fish ~/.config/fish/functions/fish_greeting.fish && \
+  cp utils/DesignSafe/fish_variables ~/.config/fish/fish_variables && \
+  cp utils/git/gitconfig ~/.gitconfig && \
+  cp utils/fortunes.txt ~/.config/fish/fortunes.txt
 
 # tmux set-up
-mkdir -p ~/.tmux
-cp utils/tmux/gpakosz/tmux.conf ~/.tmux/.tmux.conf 
-cp utils/tmux/gpakosz/tmux.conf.local ~/.tmux/.tmux.conf.local
-cd ~ && \ 
-    ln -sf ~/.tmux/.tmux.conf . && \
-    ln -sf ~/.tmux/.tmux.conf.local .
+cd $REPOS && \
+  mkdir -p ~/.tmux && \
+  cp utils/tmux/gpakosz/tmux.conf ~/.tmux/.tmux.conf && \
+  cp utils/tmux/gpakosz/tmux.conf.local ~/.tmux/.tmux.conf.local && \
+  cd ~ && \ 
+  ln -sf ~/.tmux/.tmux.conf . && \
+  ln -sf ~/.tmux/.tmux.conf.local .
 
-cp utils/git/gitconfig ~/.gitconfig
 
+# neofetch - system info utility (
+cd $REPOS && \
+  git clone https://github.com/dylanaraps/neofetch.git && \
+  mkdir ~/.local/bin && \
+  cp neofetch/neofetch ~/.local/bin/ && \
+  rm -rf neofetch
+
+# Disk utility -> DU supercharged https://github.com/bootandy/dust
+cargo install du-dust 
+
+# Another disk utility -> duf https://github.com/muesli/duf
+cd $REPOS && \
+  git clone https://github.com/muesli/duf.git && \
+  cd duf && \
+  go build && \
+  cp duf ~/.local/bin/ && \
+  cd $REPOS && \
+  rm -rf duf
+
+# Jupyter setup -> Don'y have permissions in DesignSafe to build juptyer lab so this will fail
+# pip install jupyterlab-citation-manager \
+#             aquirdturtle_collapsible_headings \
+#             jupyterlab_code_formatter \
+#             jupyterlab-topbar  \
+#             jupyterlab-topbar-text \
+#             jupyterlab-link-share  \
+#             jupyterlab_recents \
+#             jupyterlab-vim \
+#             jupyterlab_theme_solarized_dark
+# jupyter lab build
+
+# Install dev environment as a kernel
+ipython kernel install --user --name=dev
+
+# Start fish shell in environment always
 echo "conda activate dev && fish" >> ~/.bashrc
-
