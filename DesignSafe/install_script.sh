@@ -51,14 +51,17 @@ cd $REPOS && \
   cp utils/DesignSafe/config.fish ~/.config/fish/config.fish && \
   cp utils/DesignSafe/fish_greeting.fish ~/.config/fish/functions/fish_greeting.fish && \
   cp utils/git/gitconfig ~/.gitconfig && \
-  cp utils/fortunes.txt ~/.config/fish/fortunes.txt && \
   conda init fish
 
 # cp utils/DesignSafe/fish_variables ~/.config/fish/fish_variables && \
+cp $REPOS/utils/fortunes.txt ~/.local/share/fortunes.txt
 
 # Python pip packages
 pip install ipykernel \
 	    httpie \
+	    fortune \
+	    pyfiglet \
+	    lolcat \
 	    ipympl
 
 # Configure VIM
@@ -92,8 +95,8 @@ cargo install onefetch
 # neofetch - system info utility (
 cd $REPOS && \
   git clone https://github.com/dylanaraps/neofetch.git && \
-  mkdir ~/.local/bin && \
-  cp neofetch/neofetch ~/.local/bin/ && \
+  mkdir -p ~/.local/bin
+cp neofetch/neofetch ~/.local/bin/ && \
   rm -rf neofetch
 
 # Disk utility -> DU supercharged https://github.com/bootandy/dust
@@ -101,10 +104,10 @@ cargo install du-dust
 
 # Another disk utility -> duf https://github.com/muesli/duf
 cd $REPOS && \
-  git clone https://github.com/muesli/duf.git && \
-  cd duf && \
-  go build && \
-  cp duf ~/.local/bin/ && \
+  git clone https://github.com/muesli/duf.git
+cd duf && \
+  go build
+cp duf ~/.local/bin/ && \
   cd $REPOS && \
   rm -rf duf
 
@@ -130,3 +133,13 @@ cd $REPOS && \
 ipython kernel install --user --name=dev
 
 echo "alias st-dev='conda activate dev && fish'" >> ~/.bashrc
+
+dev_str="function dev_env() {
+    conda activate dev
+    pyfiglet --width 80 -f $(pyfiglet -l | shuf -n 1) $(hostname | awk '{print $1}' FS='.') | lolcat -a -s 500 -F 0.1
+    ~/.local/bin/neofetch
+    cowsay -w 80 -r $(fortune ~/.config/fish/fortunes.txt) | lolcat
+    fish
+}"
+
+echo $dev_str >> ~./bashrc

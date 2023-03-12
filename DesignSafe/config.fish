@@ -1,14 +1,7 @@
-# >>> conda initialize >>>
 if status is-interactive
     # Commands to run in interactive sessions can go here
     fish_vi_key_bindings
-    eval /home/dev/mambaforge/bin/conda "shell.fish" "hook" $argv | source
 end
-
-if test -f "/home/dev/mambaforge/etc/fish/conf.d/mamba.fish"
-	source "/home/dev/mambaforge/etc/fish/conf.d/mamba.fish"
-end
-# <<< conda initialize <<<
 
 if type -q bat
      alias cat="bat"
