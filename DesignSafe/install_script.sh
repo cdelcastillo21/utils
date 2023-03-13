@@ -4,7 +4,7 @@
 REPOS=~/MyData/repos
 
 # update base environment 
-conda update -n base -y conda
+# conda update -n base -y conda
 
 # Configure dev environment 
 conda create -n dev -y
@@ -132,14 +132,13 @@ cp duf ~/.local/bin/ && \
 # Install dev environment as a kernel
 ipython kernel install --user --name=dev
 
-echo "alias st-dev='conda activate dev && fish'" >> ~/.bashrc
-
-dev_str="function dev_env() {
-    conda activate dev
-    pyfiglet --width 80 -f $(pyfiglet -l | shuf -n 1) $(hostname | awk '{print $1}' FS='.') | lolcat -a -s 500 -F 0.1
-    ~/.local/bin/neofetch
-    cowsay -w 80 -r $(fortune ~/.config/fish/fortunes.txt) | lolcat
-    fish
-}"
-
-echo $dev_str >> ~./bashrc
+# Append the function to the end of ~/.bashrc
+echo "" >> ~/.bashrc
+echo "# Function to activate development environment and display system info" >> ~/.bashrc
+echo "dev_env() {" >> ~/.bashrc
+echo "    conda activate dev" >> ~/.bashrc
+echo "    pyfiglet --width 80 -f \$(pyfiglet -l | shuf -n 1) \$(hostname | awk '{print \$1}' FS='.') | lolcat -a -s 500 -F 0.1" >> ~/.bashrc
+echo "    ~/.lolcal/bin/neofetch" >> ~/.bashrc
+echo "    cowsay -w 80 -r \$(fortune ~/.local/share/fortunes.txt) | lolcat" >> ~/.bashrc
+echo "    fish" >> ~/.bashrc
+echo "}" >> ~/.bashrc
