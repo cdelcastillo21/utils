@@ -1,49 +1,33 @@
 #!/bin/bash -i 
 #
 
-REPOS=~/MyData/repos
+REPOS=$WORK/repos
 
 # update base environment 
 # conda update -n base -y conda
-
-# Configure dev environment 
-conda create -n dev -y
-conda activate dev
 mamba install -y fish \
-	 	 ptpython \
-                 ipykernel \
-                 nodejs \
-                 jupyterlab \
-                 flake8 \
-                 black \
-                 isort \
-                 autopep8 \
-                 ipympl \
-                 yapf \
-                 python-lsp-server  \
                  tmux \
                  vim \
                  cmake \
                  go \
-                 jq \
-                 lazygit \
                  fzf \
                  htop \
                  exa \
                  ripgrep \
                  the_silver_searcher \
                  bat \
-                 hyperfine \
-                 httpie \
                  broot \
                  bpytop \
                  tokei \
                  rust \
-                 glow \
                  trash-cli \
-                 ipydrawio \
                  curl \
                  rust
+
+# Python pip packages
+pip install fortune \
+	    pyfiglet \
+	    lolcat \
 
 # Configure fish shell
 cd $REPOS && \
@@ -52,17 +36,6 @@ cd $REPOS && \
   cp utils/DesignSafe/fish_greeting.fish ~/.config/fish/functions/fish_greeting.fish && \
   cp utils/git/gitconfig ~/.gitconfig && \
   conda init fish
-
-# cp utils/DesignSafe/fish_variables ~/.config/fish/fish_variables && \
-cp $REPOS/utils/fortunes.txt ~/.local/share/fortunes.txt
-
-# Python pip packages
-pip install ipykernel \
-	    httpie \
-	    fortune \
-	    pyfiglet \
-	    lolcat \
-	    ipympl
 
 # Configure VIM
 cd $REPOS && \
@@ -111,6 +84,67 @@ cp duf ~/.local/bin/ && \
   cd $REPOS && \
   rm -rf duf
 
+# Configure python dev environment 
+conda create -n dev -y
+conda activate dev
+mamba install -y fish \
+	 	 ptpython \
+                 ipykernel \
+                 nodejs \
+                 jupyterlab \
+                 flake8 \
+                 black \
+                 isort \
+                 autopep8 \
+                 ipympl \
+                 yapf \
+                 python-lsp-server  \
+                 tmux \
+                 vim \
+                 cmake \
+                 go \
+                 jq \
+                 lazygit \
+                 fzf \
+                 htop \
+                 exa \
+                 ripgrep \
+                 the_silver_searcher \
+                 bat \
+                 hyperfine \
+                 httpie \
+                 broot \
+                 bpytop \
+                 tokei \
+                 rust \
+                 glow \
+                 trash-cli \
+                 ipydrawio \
+                 curl \
+                 rust
+
+# cp utils/DesignSafe/fish_variables ~/.config/fish/fish_variables && \
+cp $REPOS/utils/fortunes.txt ~/.local/share/fortunes.txt
+
+# Python pip packages
+pip install ipykernel \
+	    httpie \
+	    fortune \
+	    pyfiglet \
+	    lolcat \
+	    ipympl
+
+## UTILITIES
+
+# ls replacement
+cargo install exa
+
+# For viewing github repo statistics
+cargo install onefetch
+
+# Disk utility -> DU supercharged https://github.com/bootandy/dust
+cargo install du-dust 
+
 # Jupyter setup -> Don'y have permissions in DesignSafe to build juptyer lab so this will fail
 # mamba install -n dev -y jupyter_bokeh \
 #                         jupyterlab-lsp \
@@ -138,7 +172,7 @@ echo "# Function to activate development environment and display system info" >>
 echo "dev_env() {" >> ~/.bashrc
 echo "    conda activate dev" >> ~/.bashrc
 echo "    pyfiglet --width 80 -f \$(pyfiglet -l | shuf -n 1) \$(hostname | awk '{print \$1}' FS='.') | lolcat -a -s 500 -F 0.1" >> ~/.bashrc
-echo "    ~/.lolcal/bin/neofetch" >> ~/.bashrc
-echo "    cowsay -w 80 -r \$(fortune ~/.local/share/fortunes.txt) | lolcat" >> ~/.bashrc
+echo "    ~/.local/bin/neofetch" >> ~/.bashrc
+echo "    cowsay \$(fortune ~/.local/share/fortunes.txt) | lolcat" >> ~/.bashrc
 echo "    fish" >> ~/.bashrc
 echo "}" >> ~/.bashrc
