@@ -180,7 +180,7 @@ fi
 
 # Setting up vim
 log INFO "Setting up vim..."
-mv $HOME/repos/utils/vimrc/mac-vimrc $HOME/.vimrc
+cp $HOME/repos/utils/vim/mac-vimrc $HOME/.vimrc
 mkdir -p $HOME/.vim/autoload/ && cd $HOME/.vim/autoload && \
     wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
     vim +PlugInstall +qall && \
