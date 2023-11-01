@@ -101,6 +101,34 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
+if ! command -v mamba &> /dev/null
+then
+    # Downloading Mambaforge
+    log INFO "Downloading Mambaforge..."
+    cd $HOME && curl -fsSLo Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-$(uname -m).sh"
+    if [[ $? -ne 0 ]]; then
+        log ERROR "Mambaforge download failed"
+        exit 1
+    fi
+
+    # Installing Mambaforge
+    log INFO "Installing Mambaforge..."
+    cd $HOME && bash Miniforge3.sh -b -p "${HOME}/conda"
+    if [[ $? -ne 0 ]]; then
+        log ERROR "Mambaforge installation failed"
+        exit 1
+    fi
+
+    # Create and activate path to conda/mamba
+    source "${HOME}/conda/etc/profile.d/conda.sh" && \
+    source "${HOME}/conda/etc/profile.d/mamba.sh"
+    if [[ $? -ne 0 ]]; then
+        log ERROR "Error activate conda/mamba"
+        exit 1
+    fi
+fi
+
+
 # Check if mamba environment exists
 env_exists=$($HOME/.mm/bin/mamba env list | grep -w $env_name)
 
