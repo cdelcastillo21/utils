@@ -69,33 +69,35 @@ fi
 # Installing necessary packages
 log INFO "Installing homebrew packages..."
 brew install wget \
-	     mpich \
-	     ghostscript \
-	     graphicsmagick \
-	     gdal \
-	     ffmpeg \
-	     libxt \
-	     netcdf \
-	     ncview \
-             lazygit \
-             libxaw \
-	     hdf5 \
-	     gfortran \
-	     libxml2 \
-             perl \
-	     gcc \
-	     git \
-	     gzip \
-             gnupg2 \
-             lolcat \
-	     fortune \
-	     onefetch \
-	     neofetch \
-	     the_silver_searcher \
-	     openjdk@17 \
-	     duf \
-	     dust \
-	     git-delta
+        coreutils \
+	    mpich \
+	    ghostscript \
+	    graphicsmagick \
+	    gdal \
+	    ffmpeg \
+	    libxt \
+	    netcdf \
+        fish \
+	    ncview \
+        lazygit \
+        libxaw \
+	    hdf5 \
+	    gfortran \
+	    libxml2 \
+        perl \
+	    gcc \
+	    git \
+	    gzip \
+        gnupg2 \
+        lolcat \
+	    fortune \
+	    onefetch \
+	    neofetch \
+	    the_silver_searcher \
+	    openjdk@17 \
+	    duf \
+	    dust \
+	    git-delta
 if [[ $? -ne 0 ]]; then
     log ERROR "Package installation failed"
     exit 1
@@ -121,21 +123,24 @@ then
 
     # Create and activate path to conda/mamba
     source "${HOME}/conda/etc/profile.d/conda.sh" && \
-    source "${HOME}/conda/etc/profile.d/mamba.sh"
+    source "${HOME}/conda/etc/profile.d/mamba.sh" # && \
+    # echo "source ${HOME}/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    # echo "source ${HOME}/conda/etc/profile.d/mamba.sh" >> ~/.bashrc && \
+    # echo "source ${HOME}/conda/etc/profile.d/conda.sh" >> ~/.zshrc && \
+    # echo "source ${HOME}/conda/etc/profile.d/mamba.sh" >> ~/.zshrc
     if [[ $? -ne 0 ]]; then
         log ERROR "Error activate conda/mamba"
         exit 1
     fi
 fi
 
-
 # Check if mamba environment exists
-env_exists=$($HOME/.mm/bin/mamba env list | grep -w $env_name)
+env_exists=$(mamba env list | grep -w $env_name)
 
 # Ensure mamba environment exists, create it if it doesn't
 if [[ -z $env_exists ]]; then
     log INFO "Creating mamba environment $env_name..."
-    $HOME/.mm/bin/mamba create -n $env_name -y
+    mamba create -n $env_name -y
     if [[ $? -ne 0 ]]; then
         log ERROR "Mamba environment creation failed"
         exit 1
@@ -146,7 +151,7 @@ fi
 
 # Installing packages into the mamba environment
 log INFO "Installing packages into mamba environment $env_name..."
-$HOME/.mm/bin/mamba install -n $env_name -y \
+mamba install -n $env_name -y \
                  ptpython \
                  ipykernel \
                  nodejs \
@@ -163,7 +168,6 @@ $HOME/.mm/bin/mamba install -n $env_name -y \
                  jupyterlab-git \
                  jupyterlab-spellchecker \
                  jlab-enhanced-cell-toolbar \
-                 fish \
                  tmux \
                  vim \
                  cmake \
@@ -189,40 +193,42 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
+mamba activate $env_name
+
 # Installing pip packages
 log INFO "Installing pip packages..."
-$HOME/.mm/bin/pip install jupyterlab-citation-manager \
-		  aquirdturtle_collapsible_headings \
-		  ipympl \
-		  jupyterlab_code_formatter \
-		  jupyterlab-topbar  \
-		  jupyterlab-topbar-text \
-		  jupyterlab-link-share  \
-		  jupyterlab_recents \
-		  jupyterlab-vim \
-		  jupyterlab_theme_solarized_dark
+pip install jupyterlab-citation-manager \
+        aquirdturtle_collapsible_headings \
+        ipympl \
+        jupyterlab_code_formatter \
+        jupyterlab-topbar  \
+        jupyterlab-topbar-text \
+        jupyterlab-link-share  \
+        jupyterlab_recents \
+        jupyterlab-vim \
+        jupyterlab_theme_solarized_dark
 if [[ $? -ne 0 ]]; then
     log ERROR "Pip package installation failed"
     exit 1
 fi
 
 # Setting up vim
-log INFO "Setting up vim..."
-cp $HOME/repos/utils/vim/mac-vimrc $HOME/.vimrc
-mkdir -p $HOME/.vim/autoload/ && cd $HOME/.vim/autoload && \
-    wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
-    vim +PlugInstall +qall && \
-    mkdir -p $HOME/.vim/plugged && \
-    cd $HOME/.vim/plugged/YouCompleteMe && \
-    $HOME/.mm/bin/python install.py --all
-if [[ $? -ne 0 ]]; then
-    log ERROR "Vim setup failed"
-    exit 1
-fi
+# log INFO "Setting up vim..."
+# cp $HOME/repos/utils/vim/mac-vimrc $HOME/.vimrc
+# mkdir -p $HOME/.vim/autoload/ && cd $HOME/.vim/autoload && \
+#     wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
+#     vim +PlugInstall +qall && \
+#     mkdir -p $HOME/.vim/plugged && \
+#     cd $HOME/.vim/plugged/YouCompleteMe && \
+#     python install.py --all
+# if [[ $? -ne 0 ]]; then
+#     log ERROR "Vim setup failed"
+#     exit 1
+# fi
 
 # Building Jupyter Lab
 log INFO "Building Jupyter Lab..."
-$HOME/.mm/bin/jupyter lab build
+jupyter lab build
 if [[ $? -ne 0 ]]; then
     log ERROR "Jupyter Lab build failed"
     exit 1
@@ -230,14 +236,20 @@ fi
 
 # Configuring fish shell
 log INFO "Configuring fish shell..."
-cp $HOME/repos/utils/mac/config.fish $HOME/.config/fish/config.fish && \
-	fish $HOME/repos/utils/ubuntu/fish_install.fish && \
-	cp $HOME/repos/utils/ubuntu/fish_greeting.fish $HOME/.config/fish/functions/fish_greeting.fish
+mkdir -p $HOME/.config/fish/functions && \
+    cp $HOME/repos/utils/mac-arm/config.fish $HOME/.config/fish/config.fish && \
+	fish $HOME/repos/utils/mac-arm/fish_install.fish && \
+	cp $HOME/repos/utils/mac-arm/fish_greeting.fish $HOME/.config/fish/functions/fish_greeting.fish && \
 # cp $HOME/repos/utils/ubuntu/fish_variables $HOME/.config/fish/fish_variables
 if [[ $? -ne 0 ]]; then
     log ERROR "Fish shell configuration failed"
     exit 1
 fi
+
+# Set fish to default shell (mac)
+log INFO "Setting fish as default shell..."
+sudo sh -c "echo $(which fish) >> /etc/shells" && \
+    chsh -s $(which fish)
 
 # Setting up tmux
 log INFO "Setting up tmux..."
@@ -249,8 +261,8 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-# Manual steps reminder for tmux
-echo "Manual steps:"
-echo "cd $HOME && \\"
-echo "    ln -sf $HOME/.tmux/.tmux.conf . && \\"
-echo "    ln -sf $HOME/.tmux/.tmux.conf.local ."
+# Set up tmux confs
+cd $HOME && \
+    ln -sf $HOME/.tmux/.tmux.conf . && \
+    ln -sf $HOME/.tmux/.tmux.conf.local .
+

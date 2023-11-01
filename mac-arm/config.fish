@@ -1,13 +1,10 @@
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 if status is-interactive
     # Commands to run in interactive sessions can go here
     fish_vi_key_bindings
 
-    # >>> mamba initialize >>>
-    # !! Contents within this block are managed by 'mamba init' !!
-    set -gx MAMBA_EXE "$HOME/.mm/bin/mamba"
-    set -gx MAMBA_ROOT_PREFIX "$HOME/.mm"
-    eval $HOME/.mm/bin/conda "shell.fish" "hook" $argv | source
-    # <<< mamba initialize <<<
+    eval $HOME/conda/bin/conda "shell.fish" "hook" $argv | source
 end
 
 if type -q bat
@@ -40,4 +37,3 @@ end
 if test -z "$WORK"
     set WORK $HOME/repos
 end
-
