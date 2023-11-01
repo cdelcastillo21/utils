@@ -141,12 +141,10 @@ $HOME/.mm/bin/mamba install -n $env_name -y \
                  cmake \
                  go \
                  jq \
-                 lazygit \
                  fzf \
                  htop \
                  exa \
                  ripgrep \
-                 the_silver_searcher \
                  bat \
                  hyperfine \
                  httpie \
