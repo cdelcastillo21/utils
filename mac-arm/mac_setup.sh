@@ -29,6 +29,11 @@ then
         echo "Error: Failed to install brew"
         exit 1
     fi
+    # TODO: Print the following and exit:
+    # 
+    # echo echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/cnegrete/.zprofile
+    # eval "$(/opt/homebrew/bin/brew shellenv)"
+    echo 'Add brew to PATH (see above instructions) and re-run'
 else
     echo "brew is already installed"
 fi
@@ -60,19 +65,21 @@ brew install wget \
 	     libxt \
 	     netcdf \
 	     ncview \
-         libxaw \
+             lazygit \
+             libxaw \
 	     hdf5 \
 	     gfortran \
 	     libxml2 \
-         perl \
+             perl \
 	     gcc \
 	     git \
 	     gzip \
-         gnupg2 \
-         lolcat \
+             gnupg2 \
+             lolcat \
 	     fortune \
 	     onefetch \
 	     neofetch \
+	     the_silver_searcher \
 	     openjdk@17 \
 	     duf \
 	     dust \
@@ -125,12 +132,10 @@ $HOME/.mm/bin/mamba install -y -p $HOME/.mm \
 		 cmake \
 		 go \
 		 jq \
-		 lazygit \
 		 fzf \
 		 htop \
 		 exa \
 		 ripgrep \
-		 the_silver_searcher \
 		 bat \
 		 hyperfine \
 		 httpie \
