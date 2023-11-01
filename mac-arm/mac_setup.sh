@@ -4,8 +4,8 @@
 helpFunction()
 {
     echo ""
-    echo "Usage: $0"
-    echo -e "Automates the setup of a development environment on a Mac (arm)."
+    echo "Usage: $0 [-e env_name]"
+    echo -e "\t-e Name of the mamba environment to set-up (default: 'dev')"
     exit 1 # Exit script after printing help
 }
 
@@ -14,6 +14,18 @@ log()
 {
     echo "$(date) | $1 | $2"
 }
+
+# Default environment name
+env_name='dev'
+
+# Parse command-line arguments
+while getopts "e:" opt
+do
+    case "$opt" in
+        e ) env_name="$OPTARG" ;;
+        ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
+    esac
+done
 
 # Check if the user requested help
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
@@ -89,70 +101,63 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-# Check if 'mamba' is installed, if not, install it
-if ! command -v mamba &> /dev/null
-then
-    # Downloading Mambaforge
-    log INFO "Downloading Mambaforge..."
-    cd $HOME && wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-MacOSX-arm64.sh
+# Check if mamba environment exists
+env_exists=$($HOME/.mm/bin/mamba env list | grep -w $env_name)
+
+# Ensure mamba environment exists, create it if it doesn't
+if [[ -z $env_exists ]]; then
+    log INFO "Creating mamba environment $env_name..."
+    $HOME/.mm/bin/mamba create -n $env_name -y
     if [[ $? -ne 0 ]]; then
-        log ERROR "Mambaforge download failed"
-        exit 1
-    fi
-    
-    # Installing Mambaforge
-    log INFO "Installing Mambaforge..."
-    chmod +x Mambaforge-MacOSX-arm64.sh && \
-    	./Mambaforge-MacOSX-arm64.sh -b -p $HOME/.mm && \
-    	rm Mambaforge-MacOSX-arm64.sh
-    if [[ $? -ne 0 ]]; then
-        log ERROR "Mambaforge installation failed"
+        log ERROR "Mamba environment creation failed"
         exit 1
     fi
 else
-    log INFO "Mamba already installed"
+    log INFO "Mamba environment $env_name already exists"
 fi
 
-# Installing packages with mamba
-log INFO "Installing packages with mamba..."
-$HOME/.mm/bin/mamba install -y -p $HOME/.mm \
-         ptpython \
-		 ipykernel \
-		 nodejs \
-		 jupyterlab \
-		 flake8 \
-		 black \
-		 isort \
-		 autopep8 \
-		 ipympl \
-		 yapf \
-		 jupyter_bokeh \
-		 jupyterlab-lsp \
-		 python-lsp-server  \
-		 jupyterlab-git \
-		 jupyterlab-spellchecker \
-		 jlab-enhanced-cell-toolbar \
-		 fish \
-		 tmux \
-		 vim \
-		 cmake \
-		 go \
-		 jq \
-		 fzf \
-		 htop \
-		 exa \
-		 ripgrep \
-		 bat \
-		 hyperfine \
-		 httpie \
-		 broot \
-		 tokei \
-		 glow \
-		 trash-cli \
-		 ipydrawio \
-		 sshfs \
-		 curl \
-		 -c conda-forge
+# Installing packages into the mamba environment
+log INFO "Installing packages into mamba environment $env_name..."
+$HOME/.mm/bin/mamba install -n $env_name -y \
+                 ptpython \
+                 ipykernel \
+                 nodejs \
+                 jupyterlab \
+                 flake8 \
+                 black \
+                 isort \
+                 autopep8 \
+                 ipympl \
+                 yapf \
+                 jupyter_bokeh \
+                 jupyterlab-lsp \
+                 python-lsp-server  \
+                 jupyterlab-git \
+                 jupyterlab-spellchecker \
+                 jlab-enhanced-cell-toolbar \
+                 fish \
+                 tmux \
+                 vim \
+                 cmake \
+                 go \
+                 jq \
+                 lazygit \
+                 fzf \
+                 htop \
+                 exa \
+                 ripgrep \
+                 the_silver_searcher \
+                 bat \
+                 hyperfine \
+                 httpie \
+                 broot \
+                 tokei \
+                 glow \
+                 trash-cli \
+                 ipydrawio \
+                 sshfs \
+                 curl \
+                 -c conda-forge
 if [[ $? -ne 0 ]]; then
     log ERROR "Mamba package installation failed"
     exit 1
@@ -177,10 +182,11 @@ fi
 
 # Setting up vim
 log INFO "Setting up vim..."
-mv utils/vimrc/mac-vimrc $HOME/.vimrc
+mv $HOME/repos/utils/vimrc/mac-vimrc $HOME/.vimrc
 mkdir -p $HOME/.vim/autoload/ && cd $HOME/.vim/autoload && \
     wget https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
     vim +PlugInstall +qall && \
+    mkdir -p $HOME/.vim/plugged && \
     cd $HOME/.vim/plugged/YouCompleteMe && \
     $HOME/.mm/bin/python install.py --all
 if [[ $? -ne 0 ]]; then
