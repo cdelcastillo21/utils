@@ -23,19 +23,19 @@ fi
 # Check if 'brew' is installed, if not, install it
 if ! command -v brew &> /dev/null
 then
-    echo "brew could not be found, installing it now..."
+    log INFO "brew could not be found, installing it now..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     if [[ $? -ne 0 ]]; then
-        echo "Error: Failed to install brew"
+        log ERROR "Error: Failed to install brew"
         exit 1
     fi
     # TODO: Print the following and exit:
     # 
     # echo echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/cnegrete/.zprofile
     # eval "$(/opt/homebrew/bin/brew shellenv)"
-    echo 'Add brew to PATH (see above instructions) and re-run'
+    log INFO 'Add brew to PATH (see above instructions) and re-run'
 else
-    echo "brew is already installed"
+    log INFO "brew is already installed"
 fi
 
 # Updating brew
@@ -89,22 +89,28 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-# Downloading Mambaforge
-log INFO "Downloading Mambaforge..."
-cd $HOME && wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-MacOSX-arm64.sh
-if [[ $? -ne 0 ]]; then
-    log ERROR "Mambaforge download failed"
-    exit 1
-fi
-
-# Installing Mambaforge
-log INFO "Installing Mambaforge..."
-chmod +x Mambaforge-MacOSX-arm64.sh && \
-	./Mambaforge-MacOSX-arm64.sh -b -p $HOME/.mm && \
-	rm Mambaforge-MacOSX-arm64.sh
-if [[ $? -ne 0 ]]; then
-    log ERROR "Mambaforge installation failed"
-    exit 1
+# Check if 'mamba' is installed, if not, install it
+if ! command -v mamba &> /dev/null
+then
+    # Downloading Mambaforge
+    log INFO "Downloading Mambaforge..."
+    cd $HOME && wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-MacOSX-arm64.sh
+    if [[ $? -ne 0 ]]; then
+        log ERROR "Mambaforge download failed"
+        exit 1
+    fi
+    
+    # Installing Mambaforge
+    log INFO "Installing Mambaforge..."
+    chmod +x Mambaforge-MacOSX-arm64.sh && \
+    	./Mambaforge-MacOSX-arm64.sh -b -p $HOME/.mm && \
+    	rm Mambaforge-MacOSX-arm64.sh
+    if [[ $? -ne 0 ]]; then
+        log ERROR "Mambaforge installation failed"
+        exit 1
+    fi
+else
+    log INFO "Mamba already installed"
 fi
 
 # Installing packages with mamba
