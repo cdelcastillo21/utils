@@ -48,7 +48,7 @@ function fish_greeting
 	 	    set test (string join '\n' "======== Active TMUX Sessions ========" \
 		    		     $tmux_res \
 				     "Choose an active session or start a new one:" \
-				     "[<name-of-session>/Y(defaults to first session)/N(new session-DEFAULT)]"
+				     "[<name-of-session>/Y(defaults to first session)/N(new session-DEFAULT)]" \
 				     "")
 		    printf $test | lolcat
     	            read -l -P '' value
