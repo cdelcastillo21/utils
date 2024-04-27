@@ -1,0 +1,14 @@
+{
+    "name": "Python Development",
+    "image": "close21/jlab",
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+    ],
+    "forwardPorts": [],
+    "postCreateCommand": "pip install --upgrade pip",
+    "remoteUser": "jovyan"
+}
